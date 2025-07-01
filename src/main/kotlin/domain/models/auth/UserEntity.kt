@@ -1,4 +1,4 @@
-package domain.models
+package com.commerce.domain.models.auth
 
 data class UserEntity(
     val username: String,

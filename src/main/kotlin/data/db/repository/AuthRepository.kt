@@ -1,13 +1,12 @@
 package com.commerce.data.db.repository
 
-import com.commerce.data.db.tables.UsersTable
-import domain.models.UserEntity
+import com.commerce.data.db.tables.auth.UsersTable
+import com.commerce.domain.models.auth.UserEntity
 import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
-import kotlin.text.insert
 
 class AuthRepository(private val database: Database) {
 

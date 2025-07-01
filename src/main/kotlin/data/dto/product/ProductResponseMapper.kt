@@ -1,10 +1,11 @@
 package com.commerce.data.dto.product
 
+import com.commerce.domain.models.product.ProductEntityWithId
 import data.dto.product.ProductResponse
-import domain.models.ProductEntity
 
-fun ProductEntity.toResponse(): ProductResponse {
+fun ProductEntityWithId.toResponse(): ProductResponse {
     return ProductResponse(
+        productId = this.productId,
         sellerId = this.sellerId,
         name = this.name,
         description = this.description,

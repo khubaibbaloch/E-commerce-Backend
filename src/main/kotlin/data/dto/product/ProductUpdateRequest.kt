@@ -1,11 +1,9 @@
-package data.dto.product
+package com.commerce.data.dto.product
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ProductResponse(
-    val productId: String,
-    val sellerId: String,
+class ProductUpdateRequest(
     val name: String,
     val description: String,
     val price: Double,

@@ -1,4 +1,4 @@
-package com.commerce.data.db.tables
+package com.commerce.data.db.tables.product
 
 import org.jetbrains.exposed.sql.Table
 

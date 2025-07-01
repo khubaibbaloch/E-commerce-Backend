@@ -1,7 +1,6 @@
-package domain.models
+package com.commerce.domain.models.product
 
-data class ProductEntity(
-    val sellerId: String,
+data class ProductUpdate(
     val name: String,
     val description: String,
     val price: Double,

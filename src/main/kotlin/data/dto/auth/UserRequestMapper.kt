@@ -1,6 +1,6 @@
 package com.commerce.data.dto.auth
 
-import domain.models.UserEntity
+import com.commerce.domain.models.auth.UserEntity
 
 
 fun UserRequest.toDomain(): UserEntity {

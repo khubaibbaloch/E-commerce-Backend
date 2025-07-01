@@ -1,12 +1,8 @@
 package com.commerce.domain.services
 
 import com.commerce.data.db.repository.AuthRepository
-import com.commerce.data.db.tables.UsersTable
-import domain.models.UserEntity
-import kotlinx.coroutines.Dispatchers
-import org.jetbrains.exposed.sql.*
-import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
-import org.jetbrains.exposed.sql.transactions.transaction
+import com.commerce.data.db.tables.auth.UsersTable
+import com.commerce.domain.models.auth.UserEntity
 
 
 class AuthService(private val authRepository: AuthRepository) {

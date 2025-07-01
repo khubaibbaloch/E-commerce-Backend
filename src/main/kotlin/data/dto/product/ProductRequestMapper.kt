@@ -1,6 +1,6 @@
 package com.commerce.data.dto.product
 
-import domain.models.ProductEntity
+import com.commerce.domain.models.product.ProductEntity
 
 fun ProductRequest.toDomain(sellerId: String): ProductEntity {
     return ProductEntity(

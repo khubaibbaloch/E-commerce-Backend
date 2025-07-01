@@ -1,7 +1,5 @@
-package com.commerce.data.db.tables
+package com.commerce.data.db.tables.auth
 
-import com.commerce.data.db.tables.UsersTable.autoIncrement
-import com.commerce.data.db.tables.UsersTable.uniqueIndex
 import org.jetbrains.exposed.sql.Table
 
 object UsersTable : Table("users") {
