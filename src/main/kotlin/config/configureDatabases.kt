@@ -1,23 +1,23 @@
 package com.commerce.config
 
-import com.commerce.data.db.repository.AuthRepository
-import com.commerce.data.db.repository.CartRepository
-import com.commerce.data.db.repository.OrderRepository
-import com.commerce.data.db.repository.ProductRepository
-import com.commerce.domain.services.AuthService
-import com.commerce.domain.services.CartService
-import com.commerce.domain.services.OrderService
-import com.commerce.domain.services.ProductService
-import data.db.repository.PaymentRepository
-import domain.services.PaymentService
+import com.commerce.data.auth.repository.AuthRepositoryImpl
+import com.commerce.data.cart.repository.CartRepositoryImpl
+import com.commerce.data.order.repository.OrderRepositoryImpl
+import com.commerce.data.product.repository.ProductRepositoryImpl
+import com.commerce.data.auth.service.AuthServiceImpl
+import com.commerce.data.cart.service.CartServiceImpl
+import com.commerce.data.order.service.OrderServiceImpl
+import com.commerce.data.product.service.ProductServiceImpl
+import com.commerce.data.payment.repository.PaymentRepositoryImpl
+import com.commerce.data.payment.service.PaymentServiceImpl
 import io.ktor.server.application.*
 import org.jetbrains.exposed.sql.Database
 
-lateinit var authService: AuthService
-lateinit var productService: ProductService
-lateinit var cartService: CartService
-lateinit var orderService: OrderService
-lateinit var paymentService: PaymentService
+//lateinit var authServiceImpl: AuthServiceImpl
+//lateinit var productServiceImpl: ProductServiceImpl
+//lateinit var cartServiceImpl: CartServiceImpl
+//lateinit var orderServiceImpl: OrderServiceImpl
+//lateinit var paymentServiceImpl: PaymentServiceImpl
 
 
 fun Application.configureDatabases() {
@@ -28,18 +28,18 @@ fun Application.configureDatabases() {
 
     val database = Database.connect(url, driver, user, password)
 
-    val repository = AuthRepository(database)
-    authService = AuthService(repository)
-
-    val productRepository = ProductRepository(database)
-    productService = ProductService(productRepository)
-
-    val cartRepository = CartRepository(database)
-    cartService = CartService(cartRepository)
-
-    val orderRepository = OrderRepository(database)
-    orderService = OrderService(orderRepository)
-
-    val paymentRepository = PaymentRepository(database)
-    paymentService = PaymentService(paymentRepository,orderRepository)
+//    val repository = AuthRepositoryImpl(database)
+//    authServiceImpl = AuthServiceImpl(repository)
+//
+//    val productRepositoryImpl = ProductRepositoryImpl(database)
+//    productServiceImpl = ProductServiceImpl(productRepositoryImpl)
+//
+//    val cartRepositoryImpl = CartRepositoryImpl(database)
+//    cartServiceImpl = CartServiceImpl(cartRepositoryImpl)
+//
+//    val orderRepositoryImpl = OrderRepositoryImpl(database)
+//    orderServiceImpl = OrderServiceImpl(orderRepositoryImpl)
+//
+//    val paymentRepositoryImpl = PaymentRepositoryImpl(database)
+//    paymentServiceImpl = PaymentServiceImpl(paymentRepositoryImpl,orderRepositoryImpl)
 }

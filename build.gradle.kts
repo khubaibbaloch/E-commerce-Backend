@@ -31,6 +31,7 @@ dependencies {
     implementation("com.auth0:java-jwt:4.4.0")
 
 
+
     implementation("io.ktor:ktor-serialization-kotlinx-json:${ktor_version}")
     // Clint Side
     implementation("io.ktor:ktor-client-content-negotiation:3.2.0")
@@ -49,4 +50,10 @@ dependencies {
 
     // HikariCP for connection pooling
     implementation("com.zaxxer:HikariCP:5.1.0")
+
+
+    implementation("io.insert-koin:koin-core:3.5.3")
+    implementation("io.insert-koin:koin-ktor:3.5.3")
+    implementation("io.insert-koin:koin-logger-slf4j:3.5.3")
+
 }
