@@ -9,29 +9,48 @@ import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransacti
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
+/**
+ * Implementation of AuthRepository using Exposed ORM and PostgreSQL/SQL database.
+ * Handles user-related data operations such as registration and login.
+ */
 class AuthRepositoryImpl(private val database: Database) : AuthRepository {
 
     init {
         transaction(database) {
-            //SchemaUtils.drop(UsersTable)
+            // Ensures UsersTable is created in the database (run only on app startup)
+            // SchemaUtils.drop(UsersTable)  // Uncomment for debugging DB reset
             SchemaUtils.create(UsersTable)
         }
     }
 
+    /**
+     * Inserts a new user into the database.
+     * @param userEntity The domain-level user entity.
+     * @return The generated unique user ID.
+     */
     override suspend fun insertUser(userEntity: UserEntity): String = dbQuery {
         val generatedUUID = UUID.randomUUID().toString()
         UsersTable.insert {
             it[userid] = generatedUUID
             it[username] = userEntity.username
-            it[password] = userEntity.password
+            it[password] = userEntity.password // Store hashed password if hashing applied upstream
         }
         generatedUUID
     }
 
+    /**
+     * Finds a user by username.
+     * Used primarily for login validation.
+     * @param username The username to search.
+     * @return The corresponding ResultRow if found, else null.
+     */
     override suspend fun findUser(username: String): ResultRow? = dbQuery {
         UsersTable.select { UsersTable.username eq username }.singleOrNull()
     }
 
+    /**
+     * Helper function to execute DB queries on IO dispatcher in coroutine-safe way.
+     */
     private suspend fun <T> dbQuery(block: suspend () -> T): T =
         newSuspendedTransaction(Dispatchers.IO, database) { block() }
 }

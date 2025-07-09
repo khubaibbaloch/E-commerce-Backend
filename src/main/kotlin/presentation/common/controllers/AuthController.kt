@@ -1,9 +1,8 @@
 package com.commerce.presentation.common.controllers
 
 import com.commerce.config.JwtConfig
-import com.commerce.data.auth.dto.TokenResponse
-import com.commerce.data.auth.dto.UserRequest
-import com.commerce.data.auth.mapper.toDomain
+import com.commerce.data.common.auth.dto.UserRequest
+import com.commerce.data.common.auth.mapper.toDomain
 import com.commerce.domain.auth.usecase.AuthUseCase
 import domain.common.auth.model.UserRole
 import io.ktor.http.*

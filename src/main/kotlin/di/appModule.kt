@@ -3,7 +3,7 @@ package di
 import com.commerce.data.admin.repository.AdminRepositoryImpl
 import com.commerce.data.admin.service.AdminServiceImpl
 import com.commerce.data.common.auth.repository.AuthRepositoryImpl
-import com.commerce.data.auth.service.AuthServiceImpl
+import com.commerce.data.common.auth.service.AuthServiceImpl
 import com.commerce.data.cart.repository.CartRepositoryImpl
 import com.commerce.data.cart.service.CartServiceImpl
 import com.commerce.data.order.repository.OrderRepositoryImpl
