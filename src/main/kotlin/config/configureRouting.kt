@@ -1,5 +1,6 @@
 package com.commerce.config
 
+
 import com.commerce.domain.admin.usecase.AdminUseCase
 import com.commerce.domain.auth.usecase.AuthUseCase
 import com.commerce.domain.cart.usecase.CartUseCase
@@ -25,13 +26,19 @@ import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.slf4j.LoggerFactory
 
+/**
+ * Main Ktor routing configuration.
+ * Defines all endpoint groups, applies authentication, and restricts access based on roles.
+ */
 fun Application.configureRouting() {
-//    val authService = authServiceImpl
-//    val productService = productServiceImpl
-//    val cartService = cartServiceImpl
-//    val orderService = orderServiceImpl
-//    val paymentService = paymentServiceImpl
+    // Legacy commented-out service references (previous manual wiring)
+    // val authService = authServiceImpl
+    // val productService = productServiceImpl
+    // val cartService = cartServiceImpl
+    // val orderService = orderServiceImpl
+    // val paymentService = paymentServiceImpl
 
+    // Injecting business use cases via Koin DI
     val authUseCase by inject<AuthUseCase>()
     val userProductUseCase by inject<UserProductUseCase>()
     val cartUseCase by inject<CartUseCase>()
@@ -39,36 +46,38 @@ fun Application.configureRouting() {
     val paymentUseCase by inject<PaymentUseCase>()
     val adminUseCase by inject<AdminUseCase>()
     val sellerProductUseCase by inject<SellerProductUseCase>()
-    val logger = LoggerFactory.getLogger("RoutingLogger")
+    val logger = LoggerFactory.getLogger("RoutingLogger") // For route-level logging
 
     routing {
 
+        // Public routes (no auth required)
         authRoutes(authUseCase)
 
+        // Authenticated routes (JWT required)
         authenticate("auth-jwt") {
 
-
+            // All endpoints under /user require USER role
             route("/user") {
                 roleBasedRoute(UserRole.USER) {
-                    userProductRoutes(userProductUseCase)
-                    cartRoutes(cartUseCase)
-                    orderRoutes(orderUseCase)
-                    paymentRoutes(paymentUseCase)
+                    userProductRoutes(userProductUseCase) // User browsing and product interaction
+                    cartRoutes(cartUseCase)               // User shopping cart operations
+                    orderRoutes(orderUseCase)             // User order management
+                    paymentRoutes(paymentUseCase)         // Payment handling for users
                 }
             }
 
-
+            // All endpoints under /seller require SELLER role
             route("/seller") {
                 // Protect this section with SELLER role only
                 roleBasedRoute(UserRole.SELLER) {
-                    sellerProductRoutes(sellerProductUseCase)
+                    sellerProductRoutes(sellerProductUseCase) // Manage seller product listings
                 }
             }
 
-
+            // All endpoints under /admin require ADMIN role
             route("/admin") {
                 roleBasedRoute(UserRole.ADMIN) {
-                    adminRoutes(adminUseCase)
+                    adminRoutes(adminUseCase) // Admin features like approving sellers, dashboards
                 }
             }
 
