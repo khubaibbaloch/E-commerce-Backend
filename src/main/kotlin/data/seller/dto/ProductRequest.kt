@@ -1,4 +1,4 @@
-package com.commerce.data.product.dto
+package com.commerce.data.seller.dto
 
 import kotlinx.serialization.Serializable
 

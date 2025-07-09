@@ -1,12 +1,10 @@
 package com.commerce.presentation.seller.controllers
 
-import com.commerce.data.product.dto.ProductRequest
+import com.commerce.data.seller.dto.ProductRequest
 import com.commerce.data.product.dto.ProductUpdateRequest
 import com.commerce.data.product.mapper.toDomain
 import com.commerce.data.seller.mapper.toDomain
-import com.commerce.data.user.product.mapper.toResponse
 import com.commerce.domain.seller.usecase.SellerProductUseCase
-import domain.user.product.usecase.UserProductUseCase
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.ApplicationCall
 import io.ktor.server.auth.jwt.JWTPrincipal

@@ -2,6 +2,7 @@ package com.commerce.presentation.common.routes
 
 import com.commerce.domain.auth.usecase.AuthUseCase
 import com.commerce.presentation.common.controllers.AuthController
+import domain.common.auth.model.UserRole
 import io.ktor.server.routing.*
 
 
@@ -10,7 +11,11 @@ fun Route.authRoutes(authUseCase: AuthUseCase) {
 
     route("/auth") {
         post("/signUp") { controller.signUp(call) }
-        post("/login") { controller.login(call) }
+
+        // separate login routes by role
+        post("/login/user") { controller.login(call, UserRole.USER) }
+        post("/login/seller") { controller.login(call, UserRole.SELLER) }
+        post("/login/admin") { controller.login(call, UserRole.ADMIN) }
     }
 }
 

@@ -1,15 +1,9 @@
 package com.commerce.presentation.user.controllers
 
-import com.commerce.data.product.dto.ProductRequest
-import com.commerce.data.product.dto.ProductUpdateRequest
-import com.commerce.data.seller.mapper.toDomain
 import com.commerce.data.user.product.mapper.toResponse
 import domain.user.product.usecase.UserProductUseCase
 import io.ktor.http.*
 import io.ktor.server.application.*
-import io.ktor.server.auth.*
-import io.ktor.server.auth.jwt.*
-import io.ktor.server.request.*
 import io.ktor.server.response.*
 
 class UserProductController(

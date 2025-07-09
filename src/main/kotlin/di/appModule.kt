@@ -12,6 +12,8 @@ import com.commerce.data.payment.repository.PaymentRepositoryImpl
 import com.commerce.data.payment.service.PaymentServiceImpl
 import com.commerce.data.product.repository.UserProductRepositoryImpl
 import com.commerce.data.product.service.UserProductServiceImpl
+import com.commerce.data.seller.repository.SellerProductRepositoryImpl
+import com.commerce.data.seller.service.SellerProductServiceImpl
 import com.commerce.domain.admin.repository.AdminRepository
 import com.commerce.domain.admin.service.AdminService
 import com.commerce.domain.admin.usecase.AdminUseCase
@@ -32,6 +34,9 @@ import com.commerce.domain.order.usecase.OrderUseCase
 import com.commerce.domain.order.usecase.PlaceOrderUseCase
 import com.commerce.domain.payment.repository.PaymentRepository
 import com.commerce.domain.payment.service.PaymentService
+import com.commerce.domain.seller.repository.SellerProductRepository
+import com.commerce.domain.seller.service.SellerProductService
+import com.commerce.domain.seller.usecase.SellerProductUseCase
 import com.commerce.domain.seller.usecase.UpdateProductByIdUseCase
 import com.commerce.domain.user.product.repository.UserProductRepository
 import com.commerce.domain.user.product.service.UserProductService
@@ -77,6 +82,7 @@ fun appModule(env: ApplicationEnvironment) = module {
 //    single<AuthRepository> { AuthRepositoryImpl(get()) }
 //    single<AuthService> { AuthServiceImpl(get()) }
 
+    // -------------------- COMMON--------------------
 
     // -------------------- AUTH --------------------
     single<AuthRepository> { AuthRepositoryImpl(get()) }
@@ -86,12 +92,14 @@ fun appModule(env: ApplicationEnvironment) = module {
     single { AuthUseCase(get(), get()) }
 
 
+    // -------------------- USER --------------------
+
     // -------------------- PRODUCT --------------------
     single<UserProductRepository> { UserProductRepositoryImpl(get()) }
     single<UserProductService> { UserProductServiceImpl(get()) }
-    factory { InsertProductUseCase(get()) }
     factory { FindProductByNameUseCase(get()) }
     factory { GetAllProductsUseCase(get()) }
+    factory { InsertProductUseCase(get()) }
     factory { UpdateProductByIdUseCase(get()) }
     factory { DeleteProductByIdUseCase(get()) }
     single { UserProductUseCase(get(), get()) }
@@ -130,6 +138,16 @@ fun appModule(env: ApplicationEnvironment) = module {
     factory { GetAllUserUseCase(get()) }
     factory { GetAllProductsUseCase(get()) }
     single { AdminUseCase(get(),get()) }
+
+
+    // -------------------- SELLER --------------------
+
+    single<SellerProductRepository> { SellerProductRepositoryImpl(get()) }
+    single<SellerProductService> { SellerProductServiceImpl(get()) }
+    factory { InsertProductUseCase(get()) }
+    factory { UpdateProductByIdUseCase(get()) }
+    factory { DeleteProductByIdUseCase(get()) }
+    single { SellerProductUseCase(get(), get(), get()) }
 
 
 }

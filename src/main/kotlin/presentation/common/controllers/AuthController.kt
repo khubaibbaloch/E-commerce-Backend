@@ -27,15 +27,16 @@ class AuthController(private val authUseCase: AuthUseCase) {
         }
     }
 
-    suspend fun login(call: ApplicationCall) {
+    suspend fun login(call: ApplicationCall, role: UserRole) {
         val request = call.receive<UserRequest>()
         val user = request.toDomain()
         val userId = authUseCase.loginUseCase(user)
+
         if (userId != null) {
-            val token = JwtConfig.generateToken(userId,UserRole.USER)
-            call.respond(HttpStatusCode.OK, TokenResponse(token))
+            val token = JwtConfig.generateToken(userId, role)
+            call.respond(HttpStatusCode.OK, mapOf("token" to token))
         } else {
-            call.respond(HttpStatusCode.Unauthorized, "Invalid username or password")
+            call.respond(HttpStatusCode.Unauthorized, "Invalid credentials")
         }
     }
 }

@@ -1,6 +1,6 @@
 package com.commerce.data.product.mapper
 
-import com.commerce.data.product.dto.ProductRequest
+import com.commerce.data.seller.dto.ProductRequest
 import com.commerce.domain.seller.model.ProductEntity
 
 fun ProductRequest.toDomain(sellerId: String): ProductEntity {

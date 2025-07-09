@@ -5,6 +5,8 @@ import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.interfaces.JWTVerifier
 import domain.common.auth.model.UserRole
 import io.ktor.server.application.*
+import io.ktor.server.auth.jwt.JWTPrincipal
+import io.ktor.server.auth.principal
 
 object JwtConfig {
     private lateinit var secret: String
@@ -34,4 +36,11 @@ object JwtConfig {
         .withClaim("role",role.name)
         //.withExpiresAt(Date(System.currentTimeMillis() + 5000))
         .sign(algorithm)
+
+    fun getRoleFromToken(call: ApplicationCall): String? =
+        call.principal<JWTPrincipal>("auth-jwt")
+            ?.payload
+            ?.getClaim("role")
+            ?.asString()
+
 }

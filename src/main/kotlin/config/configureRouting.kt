@@ -4,8 +4,10 @@ import com.commerce.domain.admin.usecase.AdminUseCase
 import com.commerce.domain.auth.usecase.AuthUseCase
 import com.commerce.domain.cart.usecase.CartUseCase
 import com.commerce.domain.order.usecase.OrderUseCase
+import com.commerce.domain.seller.usecase.SellerProductUseCase
 import com.commerce.presentation.admin.routes.adminRoutes
 import com.commerce.presentation.common.routes.authRoutes
+import com.commerce.presentation.seller.routes.sellerProductRoutes
 import com.commerce.presentation.user.routes.cartRoutes
 import com.commerce.presentation.user.routes.orderRoutes
 import com.commerce.presentation.user.routes.paymentRoutes
@@ -14,6 +16,7 @@ import com.commerce.utils.roleBasedRoute
 import domain.common.auth.model.UserRole
 import domain.user.payment.usecase.PaymentUseCase
 import domain.user.product.usecase.UserProductUseCase
+import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.JWTPrincipal
@@ -35,6 +38,7 @@ fun Application.configureRouting() {
     val orderUseCase by inject<OrderUseCase>()
     val paymentUseCase by inject<PaymentUseCase>()
     val adminUseCase by inject<AdminUseCase>()
+    val sellerProductUseCase by inject<SellerProductUseCase>()
     val logger = LoggerFactory.getLogger("RoutingLogger")
 
     routing {
@@ -45,15 +49,6 @@ fun Application.configureRouting() {
 
 
             route("/user") {
-                route("/ping") {
-                    get {
-                        val principal = call.principal<JWTPrincipal>("auth-jwt")
-                        val role = principal?.payload?.getClaim("role")?.asString()
-
-                        call.respond(mapOf("result" to "$role"))
-                        println("JWT role from token: '$role'")
-                    }
-                }
                 roleBasedRoute(UserRole.USER) {
                     userProductRoutes(userProductUseCase)
                     cartRoutes(cartUseCase)
@@ -63,18 +58,19 @@ fun Application.configureRouting() {
             }
 
 
-//                route("/seller") {
-//                    roleBasedRoute(UserRole.SELLER) {
-//                        get("/ping") { call.respond(mapOf("Ping" to "Working")) }
-//                }
-//            }
-//
-//
-//                route("/admin") {
-//                    roleBasedRoute(UserRole.ADMIN) {
-//                    adminRoutes(adminUseCase)
-//                }
-//            }
+            route("/seller") {
+                // Protect this section with SELLER role only
+                roleBasedRoute(UserRole.SELLER) {
+                    sellerProductRoutes(sellerProductUseCase)
+                }
+            }
+
+
+            route("/admin") {
+                roleBasedRoute(UserRole.ADMIN) {
+                    adminRoutes(adminUseCase)
+                }
+            }
 
         }
     }

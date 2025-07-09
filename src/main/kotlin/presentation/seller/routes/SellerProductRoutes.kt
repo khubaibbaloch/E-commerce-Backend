@@ -13,7 +13,7 @@ import io.ktor.server.routing.route
 
 fun Route.sellerProductRoutes(sellerProductUseCase: SellerProductUseCase) {
     val controller = SellerProductController(sellerProductUseCase)
-    route("/products") {
+    route("/product") {
         get("/ping") { controller.ping(call) }
         post { controller.insertProduct(call) }
         put("/{productId}") { controller.updateProduct(call) }
