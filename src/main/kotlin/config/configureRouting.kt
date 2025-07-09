@@ -54,12 +54,12 @@ fun Application.configureRouting() {
                         println("JWT role from token: '$role'")
                     }
                 }
-                //roleBasedRoute(UserRole.USER) {
+                roleBasedRoute(UserRole.USER) {
                     userProductRoutes(userProductUseCase)
                     cartRoutes(cartUseCase)
                     orderRoutes(orderUseCase)
                     paymentRoutes(paymentUseCase)
-                //}
+                }
             }
 
 
