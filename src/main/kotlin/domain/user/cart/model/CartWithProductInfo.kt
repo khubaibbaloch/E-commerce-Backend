@@ -1,6 +1,6 @@
 package com.commerce.domain.user.cart.model
 
-import com.commerce.domain.product.model.ProductEntityWithId
+import com.commerce.domain.user.product.model.ProductEntityWithId
 
 /**
  * Domain model that represents a cart item along with the product details.

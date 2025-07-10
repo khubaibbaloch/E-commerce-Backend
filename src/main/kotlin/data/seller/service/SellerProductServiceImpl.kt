@@ -1,6 +1,5 @@
 package com.commerce.data.seller.service
 
-import com.commerce.domain.product.model.ProductEntityWithId
 import com.commerce.domain.seller.model.ProductEntity
 import com.commerce.domain.seller.model.ProductUpdate
 import com.commerce.domain.seller.repository.SellerProductRepository

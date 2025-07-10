@@ -1,7 +1,6 @@
 package com.commerce.data.seller.repository
 
 import com.commerce.data.seller.table.ProductTable
-import com.commerce.domain.product.model.ProductEntityWithId
 import com.commerce.domain.seller.model.ProductEntity
 import com.commerce.domain.seller.model.ProductUpdate
 import com.commerce.domain.seller.repository.SellerProductRepository

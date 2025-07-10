@@ -1,6 +1,6 @@
 package com.commerce.data.user.product.service
 
-import com.commerce.domain.product.model.ProductEntityWithId
+import com.commerce.domain.user.product.model.ProductEntityWithId
 import com.commerce.domain.user.product.repository.UserProductRepository
 import com.commerce.domain.user.product.service.UserProductService
 

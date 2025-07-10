@@ -4,7 +4,7 @@ import com.commerce.data.user.cart.table.CartTable
 import com.commerce.data.seller.table.ProductTable
 import com.commerce.domain.user.cart.model.CartEntity
 import com.commerce.domain.user.cart.model.CartUpdateEntity
-import com.commerce.domain.product.model.ProductEntityWithId
+import com.commerce.domain.user.product.model.ProductEntityWithId
 import com.commerce.domain.user.cart.model.CartWithProductInfo
 import com.commerce.domain.user.cart.repository.CartRepository
 import kotlinx.coroutines.Dispatchers

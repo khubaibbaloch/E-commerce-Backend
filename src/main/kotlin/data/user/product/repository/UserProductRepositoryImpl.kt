@@ -1,7 +1,7 @@
 package com.commerce.data.user.product.repository
 
 import com.commerce.data.seller.table.ProductTable
-import com.commerce.domain.product.model.ProductEntityWithId
+import com.commerce.domain.user.product.model.ProductEntityWithId
 import com.commerce.domain.user.product.repository.UserProductRepository
 import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.sql.*

@@ -1,6 +1,6 @@
 package com.commerce.data.user.product.mapper
 
-import com.commerce.domain.product.model.ProductEntityWithId
+import com.commerce.domain.user.product.model.ProductEntityWithId
 import com.commerce.data.user.product.dto.ProductResponse
 
 /**
