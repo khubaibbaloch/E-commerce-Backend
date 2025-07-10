@@ -1,7 +1,7 @@
 package com.commerce.data.user.payment.service
 
 import com.commerce.domain.payment.model.PaymentRequestEntity
-import com.commerce.domain.order.repository.OrderRepository
+import com.commerce.domain.user.order.repository.OrderRepository
 import com.commerce.domain.payment.model.PaymentEntity
 import com.commerce.domain.payment.repository.PaymentRepository
 import com.commerce.domain.payment.service.PaymentService

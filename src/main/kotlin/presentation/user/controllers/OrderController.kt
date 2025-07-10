@@ -4,7 +4,7 @@ import com.commerce.data.user.order.dto.OrderItemResponse
 import com.commerce.data.user.order.dto.OrderRequest
 import com.commerce.data.user.order.dto.OrderResponse
 import com.commerce.data.user.order.mapper.toEntity
-import com.commerce.domain.order.usecase.OrderUseCase
+import com.commerce.domain.user.order.usecase.OrderUseCase
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*

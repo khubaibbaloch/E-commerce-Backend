@@ -1,6 +1,6 @@
 package com.commerce.presentation.user.routes
 
-import com.commerce.domain.order.usecase.OrderUseCase
+import com.commerce.domain.user.order.usecase.OrderUseCase
 import com.commerce.presentation.user.controllers.OrderController
 import io.ktor.server.routing.*
 

@@ -4,7 +4,7 @@ package com.commerce.config
 import com.commerce.domain.admin.usecase.AdminUseCase
 import com.commerce.domain.common.auth.usecase.AuthUseCase
 import com.commerce.domain.user.cart.usecase.CartUseCase
-import com.commerce.domain.order.usecase.OrderUseCase
+import com.commerce.domain.user.order.usecase.OrderUseCase
 import com.commerce.domain.seller.usecase.SellerProductUseCase
 import com.commerce.presentation.admin.routes.adminRoutes
 import com.commerce.presentation.common.routes.authRoutes

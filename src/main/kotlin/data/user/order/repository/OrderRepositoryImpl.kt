@@ -2,9 +2,9 @@ package com.commerce.data.user.order.repository
 
 import com.commerce.data.user.order.table.OrderItemsTable
 import com.commerce.data.user.order.table.OrdersTable
-import com.commerce.domain.order.model.OrderEntity
-import com.commerce.domain.order.model.OrderItemEntity
-import com.commerce.domain.order.repository.OrderRepository
+import com.commerce.domain.user.order.model.OrderEntity
+import com.commerce.domain.user.order.model.OrderItemEntity
+import com.commerce.domain.user.order.repository.OrderRepository
 import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction

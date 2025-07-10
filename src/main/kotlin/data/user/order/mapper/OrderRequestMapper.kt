@@ -1,8 +1,8 @@
 package com.commerce.data.user.order.mapper
 
 import com.commerce.data.user.order.dto.OrderRequest
-import com.commerce.domain.order.model.OrderEntity
-import com.commerce.domain.order.model.OrderItemEntity
+import com.commerce.domain.user.order.model.OrderEntity
+import com.commerce.domain.user.order.model.OrderItemEntity
 
 /**
  * Extension function to convert an [OrderRequest] DTO to a domain [OrderEntity].

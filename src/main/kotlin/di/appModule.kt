@@ -28,10 +28,10 @@ import com.commerce.domain.user.cart.service.CartService
 import com.commerce.domain.user.cart.usecase.AddCartUseCase
 import com.commerce.domain.user.cart.usecase.CartUseCase
 import com.commerce.domain.user.cart.usecase.FindCartByUserIdUseCase
-import com.commerce.domain.order.repository.OrderRepository
-import com.commerce.domain.order.service.OrderService
-import com.commerce.domain.order.usecase.OrderUseCase
-import com.commerce.domain.order.usecase.PlaceOrderUseCase
+import com.commerce.domain.user.order.repository.OrderRepository
+import com.commerce.domain.user.order.service.OrderService
+import com.commerce.domain.user.order.usecase.OrderUseCase
+import com.commerce.domain.user.order.usecase.PlaceOrderUseCase
 import com.commerce.domain.payment.repository.PaymentRepository
 import com.commerce.domain.payment.service.PaymentService
 import com.commerce.domain.seller.repository.SellerProductRepository

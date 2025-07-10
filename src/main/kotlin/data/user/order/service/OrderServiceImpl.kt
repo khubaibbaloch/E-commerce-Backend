@@ -1,8 +1,8 @@
 package com.commerce.data.user.order.service
 
-import com.commerce.domain.order.model.OrderEntity
-import com.commerce.domain.order.repository.OrderRepository
-import com.commerce.domain.order.service.OrderService
+import com.commerce.domain.user.order.model.OrderEntity
+import com.commerce.domain.user.order.repository.OrderRepository
+import com.commerce.domain.user.order.service.OrderService
 
 /**
  * Implementation of [OrderService] that handles business logic
