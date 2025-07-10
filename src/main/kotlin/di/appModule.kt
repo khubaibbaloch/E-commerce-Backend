@@ -32,8 +32,8 @@ import com.commerce.domain.user.order.repository.OrderRepository
 import com.commerce.domain.user.order.service.OrderService
 import com.commerce.domain.user.order.usecase.OrderUseCase
 import com.commerce.domain.user.order.usecase.PlaceOrderUseCase
-import com.commerce.domain.payment.repository.PaymentRepository
-import com.commerce.domain.payment.service.PaymentService
+import com.commerce.domain.user.payment.repository.PaymentRepository
+import com.commerce.domain.user.payment.service.PaymentService
 import com.commerce.domain.seller.repository.SellerProductRepository
 import com.commerce.domain.seller.service.SellerProductService
 import com.commerce.domain.seller.usecase.DeleteProductByIdUseCase

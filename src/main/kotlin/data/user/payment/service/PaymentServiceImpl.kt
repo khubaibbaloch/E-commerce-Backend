@@ -1,10 +1,10 @@
 package com.commerce.data.user.payment.service
 
-import com.commerce.domain.payment.model.PaymentRequestEntity
+import com.commerce.domain.user.payment.model.PaymentRequestEntity
 import com.commerce.domain.user.order.repository.OrderRepository
-import com.commerce.domain.payment.model.PaymentEntity
-import com.commerce.domain.payment.repository.PaymentRepository
-import com.commerce.domain.payment.service.PaymentService
+import com.commerce.domain.user.payment.model.PaymentEntity
+import com.commerce.domain.user.payment.repository.PaymentRepository
+import com.commerce.domain.user.payment.service.PaymentService
 import java.util.*
 
 /**

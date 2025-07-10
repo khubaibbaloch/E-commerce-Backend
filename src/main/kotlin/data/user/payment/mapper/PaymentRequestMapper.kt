@@ -1,6 +1,6 @@
 package com.commerce.data.user.payment.mapper
 
-import com.commerce.domain.payment.model.PaymentRequestEntity
+import com.commerce.domain.user.payment.model.PaymentRequestEntity
 import com.commerce.data.user.payment.dto.PaymentRequest
 
 /**

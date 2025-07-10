@@ -1,8 +1,8 @@
 package com.commerce.data.user.payment.repository
 
 import com.commerce.data.user.payment.table.PaymentsTable
-import com.commerce.domain.payment.model.PaymentEntity
-import com.commerce.domain.payment.repository.PaymentRepository
+import com.commerce.domain.user.payment.model.PaymentEntity
+import com.commerce.domain.user.payment.repository.PaymentRepository
 import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
