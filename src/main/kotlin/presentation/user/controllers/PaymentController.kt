@@ -1,8 +1,8 @@
 package com.commerce.presentation.user.controllers
 
-import com.commerce.data.payment.dto.PaymentRequest
-import com.commerce.data.payment.dto.PaymentResponse
-import com.commerce.data.payment.mapper.toDomain
+import com.commerce.data.user.payment.dto.PaymentRequest
+import com.commerce.data.user.payment.dto.PaymentResponse
+import com.commerce.data.user.payment.mapper.toDomain
 import domain.user.payment.usecase.PaymentUseCase
 import io.ktor.http.*
 import io.ktor.server.application.*

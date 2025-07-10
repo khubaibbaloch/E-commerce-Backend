@@ -1,26 +1,34 @@
-package com.commerce.data.product.repository
+package com.commerce.data.user.product.repository
 
 import com.commerce.data.seller.table.ProductTable
 import com.commerce.domain.product.model.ProductEntityWithId
-import com.commerce.domain.seller.model.ProductUpdate
-import com.commerce.domain.seller.model.ProductEntity
 import com.commerce.domain.user.product.repository.UserProductRepository
 import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.sql.*
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
-import java.util.*
 
-class UserProductRepositoryImpl(private val database: Database):UserProductRepository {
+/**
+ * Implementation of [UserProductRepository] for accessing product data
+ * available to the end-user (read-only access).
+ */
+class UserProductRepositoryImpl(private val database: Database) : UserProductRepository {
 
     init {
         transaction(database) {
-            //SchemaUtils.drop(ProductTable)
+            // Ensure the product table schema is created if not already present.
+            // Uncomment 'drop' during development only (e.g., schema reset).
+            // SchemaUtils.drop(ProductTable)
             SchemaUtils.create(ProductTable)
         }
     }
 
+    /**
+     * Finds all products by their exact name.
+     *
+     * @param productName the name to search for
+     * @return list of products with matching name
+     */
     override suspend fun findProductsByName(productName: String): List<ProductEntityWithId> = dbQuery {
         ProductTable.select { ProductTable.name eq productName }
             .map {
@@ -35,6 +43,11 @@ class UserProductRepositoryImpl(private val database: Database):UserProductRepos
             }
     }
 
+    /**
+     * Retrieves all products from the database.
+     *
+     * @return list of all available products
+     */
     override suspend fun getAllProducts(): List<ProductEntityWithId> = dbQuery {
         ProductTable.selectAll()
             .map {
@@ -49,6 +62,11 @@ class UserProductRepositoryImpl(private val database: Database):UserProductRepos
             }
     }
 
+    /**
+     * Executes a suspended transaction on the IO dispatcher to perform database queries safely.
+     *
+     * @param block the suspending database logic to execute
+     */
     private suspend fun <T> dbQuery(block: suspend () -> T): T =
         newSuspendedTransaction(Dispatchers.IO, database) { block() }
 }

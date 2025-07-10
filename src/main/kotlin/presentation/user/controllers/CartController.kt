@@ -1,9 +1,9 @@
 package com.commerce.presentation.user.controllers
 
-import com.commerce.data.cart.dto.CartRequest
-import com.commerce.data.cart.dto.CartUpdateRequest
-import com.commerce.data.cart.mapper.toDomain
-import com.commerce.data.cart.mapper.toResponse
+import com.commerce.data.user.cart.dto.CartRequest
+import com.commerce.data.user.cart.dto.CartUpdateRequest
+import com.commerce.data.user.cart.mapper.toDomain
+import com.commerce.data.user.cart.mapper.toResponse
 import com.commerce.domain.cart.usecase.CartUseCase
 import io.ktor.http.*
 import io.ktor.server.application.*

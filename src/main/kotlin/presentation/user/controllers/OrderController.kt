@@ -1,9 +1,9 @@
 package com.commerce.presentation.user.controllers
 
-import com.commerce.data.order.dto.OrderItemResponse
-import com.commerce.data.order.dto.OrderRequest
-import com.commerce.data.order.dto.OrderResponse
-import com.commerce.data.order.mapper.toEntity
+import com.commerce.data.user.order.dto.OrderItemResponse
+import com.commerce.data.user.order.dto.OrderRequest
+import com.commerce.data.user.order.dto.OrderResponse
+import com.commerce.data.user.order.mapper.toEntity
 import com.commerce.domain.order.usecase.OrderUseCase
 import io.ktor.http.*
 import io.ktor.server.application.*

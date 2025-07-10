@@ -1,6 +1,6 @@
-package com.commerce.data.cart.repository
+package com.commerce.data.user.cart.repository
 
-import com.commerce.data.cart.table.CartTable
+import com.commerce.data.user.cart.table.CartTable
 import com.commerce.data.seller.table.ProductTable
 import com.commerce.domain.cart.model.CartEntity
 import com.commerce.domain.cart.model.CartUpdateEntity
@@ -14,14 +14,25 @@ import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransacti
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
-class CartRepositoryImpl(private val database: Database):CartRepository{
+/**
+ * Repository implementation for managing cart operations in the database.
+ * Handles CRUD operations for the user's cart and also joins with products.
+ */
+class CartRepositoryImpl(private val database: Database): CartRepository {
+
     init {
+        // Initializes the CartTable schema when this repository is first constructed.
+        // Uncomment SchemaUtils.drop(...) during development to reset the table.
         transaction(database) {
             //SchemaUtils.drop(CartTable)
             SchemaUtils.create(CartTable)
         }
     }
 
+    /**
+     * Adds a product to the user's cart.
+     * Generates a unique UUID for the cart entry.
+     */
     override suspend fun addCart(cartEntity: CartEntity): String = dbQuery {
         val generatedUUID = UUID.randomUUID().toString()
         CartTable.insert {
@@ -30,21 +41,13 @@ class CartRepositoryImpl(private val database: Database):CartRepository{
             it[productId] = cartEntity.productId
             it[quantity] = cartEntity.quantity
         }
-        generatedUUID
+        return@dbQuery generatedUUID
     }
 
-//    suspend fun findCartByUserId(userId: String): List<CartEntity> = dbQuery {
-//        CartTable.select { CartTable.userId eq userId }
-//            .map {
-//                CartEntity(
-//                    cartId = it[CartTable.cartId],
-//                    userId = it[CartTable.userId],
-//                    productId = it[CartTable.productId],
-//                    quantity = it[CartTable.quantity]
-//                )
-//            }
-//    }
-
+    /**
+     * Returns a list of all items in the user's cart along with full product details.
+     * Performs a SQL JOIN between CartTable and ProductTable.
+     */
     override suspend fun findCartByUserId(userId: String): List<CartWithProductInfo> = dbQuery {
         CartTable.join(
             ProductTable,
@@ -70,18 +73,30 @@ class CartRepositoryImpl(private val database: Database):CartRepository{
             }
     }
 
+    /**
+     * Updates the quantity of a specific item in the cart by cart ID.
+     * Returns true if at least one row was updated.
+     */
     override suspend fun updateCart(cartId: String, updateEntity: CartUpdateEntity): Boolean = dbQuery {
         val rowsUpdated = CartTable.update({ CartTable.cartId eq cartId }) {
             it[quantity] = updateEntity.quantity
         }
-        rowsUpdated > 0
+        return@dbQuery rowsUpdated > 0
     }
+
+    /**
+     * Deletes a cart item by its cart ID.
+     * Returns true if the deletion was successful.
+     */
     override suspend fun deleteCart(cartId: String): Boolean = dbQuery {
-        val rowsUpdated = CartTable.deleteWhere { CartTable.cartId eq cartId  }
-        rowsUpdated > 0
+        val rowsDeleted = CartTable.deleteWhere { CartTable.cartId eq cartId }
+        return@dbQuery rowsDeleted > 0
     }
 
-
+    /**
+     * Utility function to run all DB operations in the IO coroutine dispatcher.
+     * Ensures non-blocking DB access for better performance.
+     */
     private suspend fun <T> dbQuery(block: suspend () -> T): T =
         newSuspendedTransaction(Dispatchers.IO, database) { block() }
 }
