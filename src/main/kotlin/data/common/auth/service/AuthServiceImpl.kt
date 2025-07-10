@@ -1,9 +1,9 @@
 package com.commerce.data.common.auth.service
 
 import com.commerce.data.common.auth.table.UsersTable
-import com.commerce.domain.auth.model.UserEntity
-import com.commerce.domain.auth.repository.AuthRepository
-import com.commerce.domain.auth.service.AuthService
+import com.commerce.domain.common.auth.model.UserEntity
+import com.commerce.domain.common.auth.repository.AuthRepository
+import com.commerce.domain.common.auth.service.AuthService
 
 /**
  * Implementation of [AuthService] responsible for user authentication and registration logic.

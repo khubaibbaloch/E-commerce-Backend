@@ -1,8 +1,8 @@
 package com.commerce.data.common.auth.repository
 
 import com.commerce.data.common.auth.table.UsersTable
-import com.commerce.domain.auth.model.UserEntity
-import com.commerce.domain.auth.repository.AuthRepository
+import com.commerce.domain.common.auth.model.UserEntity
+import com.commerce.domain.common.auth.repository.AuthRepository
 import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction

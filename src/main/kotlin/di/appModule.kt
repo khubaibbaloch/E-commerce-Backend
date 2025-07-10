@@ -18,11 +18,11 @@ import com.commerce.domain.admin.repository.AdminRepository
 import com.commerce.domain.admin.service.AdminService
 import com.commerce.domain.admin.usecase.AdminUseCase
 import com.commerce.domain.admin.usecase.GetAllUserUseCase
-import com.commerce.domain.auth.repository.AuthRepository
-import com.commerce.domain.auth.service.AuthService
-import com.commerce.domain.auth.usecase.AuthUseCase
-import com.commerce.domain.auth.usecase.LoginUseCase
-import com.commerce.domain.auth.usecase.RegisterAndReturnUserIdUseCase
+import com.commerce.domain.common.auth.repository.AuthRepository
+import com.commerce.domain.common.auth.service.AuthService
+import com.commerce.domain.common.auth.usecase.AuthUseCase
+import com.commerce.domain.common.auth.usecase.LoginUseCase
+import com.commerce.domain.common.auth.usecase.RegisterAndReturnUserIdUseCase
 import com.commerce.domain.cart.repository.CartRepository
 import com.commerce.domain.cart.service.CartService
 import com.commerce.domain.cart.usecase.AddCartUseCase

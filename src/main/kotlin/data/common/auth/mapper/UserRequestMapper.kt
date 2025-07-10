@@ -1,7 +1,7 @@
 package com.commerce.data.common.auth.mapper
 
 import com.commerce.data.common.auth.dto.UserRequest
-import com.commerce.domain.auth.model.UserEntity
+import com.commerce.domain.common.auth.model.UserEntity
 
 /**
  * Extension function to map a UserRequest DTO to a domain-level UserEntity.

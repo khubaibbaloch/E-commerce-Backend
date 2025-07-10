@@ -2,7 +2,7 @@ package com.commerce.config
 
 
 import com.commerce.domain.admin.usecase.AdminUseCase
-import com.commerce.domain.auth.usecase.AuthUseCase
+import com.commerce.domain.common.auth.usecase.AuthUseCase
 import com.commerce.domain.cart.usecase.CartUseCase
 import com.commerce.domain.order.usecase.OrderUseCase
 import com.commerce.domain.seller.usecase.SellerProductUseCase
@@ -17,11 +17,8 @@ import com.commerce.utils.roleBasedRoute
 import domain.common.auth.model.UserRole
 import domain.user.payment.usecase.PaymentUseCase
 import domain.user.product.usecase.UserProductUseCase
-import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
-import io.ktor.server.auth.jwt.JWTPrincipal
-import io.ktor.server.response.respond
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.slf4j.LoggerFactory

@@ -1,6 +1,6 @@
 package com.commerce.presentation.common.routes
 
-import com.commerce.domain.auth.usecase.AuthUseCase
+import com.commerce.domain.common.auth.usecase.AuthUseCase
 import com.commerce.presentation.common.controllers.AuthController
 import domain.common.auth.model.UserRole
 import io.ktor.server.routing.*
