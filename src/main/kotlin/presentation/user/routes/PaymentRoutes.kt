@@ -4,47 +4,23 @@ import domain.user.payment.usecase.PaymentUseCase
 import io.ktor.server.routing.*
 import com.commerce.presentation.user.controllers.PaymentController
 
-//fun Route.paymentRoutes(paymentService: PaymentService) {
-//    route("/payments") {
-//
-//        post {
-//            val principal = call.principal<JWTPrincipal>()
-//            val userId = principal?.getClaim("userId", String::class)
-//                ?: return@post call.respond(HttpStatusCode.Unauthorized, "Unauthorized")
-//
-//            val request = call.receive<PaymentRequest>()
-//            val updateModel = request.toDomain()
-//            val paymentId = paymentService.createPayment(updateModel, userId)
-//            call.respond(HttpStatusCode.Created, mapOf("paymentId" to paymentId))
-//        }
-//
-//        get {
-//            val principal = call.principal<JWTPrincipal>()
-//            val userId = principal?.getClaim("userId", String::class)
-//                ?: return@get call.respond(HttpStatusCode.Unauthorized, "Unauthorized")
-//
-//            val payments = paymentService.getPayments(userId)
-//            val response = payments.map {
-//                PaymentResponse(
-//                    paymentId = it.paymentId,
-//                    orderId = it.orderId,
-//                    amount = it.amount,
-//                    status = it.status,
-//                    paymentMethod = it.paymentMethod,
-//                    createdAt = it.createdAt
-//                )
-//            }
-//            call.respond(HttpStatusCode.OK, response)
-//        }
-//    }
-//}
-
+/**
+ * Defines the HTTP routes for handling payment-related operations.
+ * This includes creating a payment and retrieving a user's payment history.
+ *
+ * Base path: /payments
+ */
 fun Route.paymentRoutes(paymentUseCase: PaymentUseCase) {
+    // Initialize the controller with the required use case
     val controller = PaymentController(paymentUseCase)
 
+    // Group all payment-related routes under "/payments"
     route("/payments") {
-        post { controller.createPayment(call) }
-        get { controller.getPayments(call) }
 
+        // POST /payments - Create a new payment for an existing order
+        post { controller.createPayment(call) }
+
+        // GET /payments - Retrieve all payments made by the authenticated user
+        get { controller.getPayments(call) }
     }
 }

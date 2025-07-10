@@ -4,78 +4,29 @@ import com.commerce.domain.user.order.usecase.OrderUseCase
 import com.commerce.presentation.user.controllers.OrderController
 import io.ktor.server.routing.*
 
-//fun Route.orderRoutes(orderService: OrderService) {
-//    route("/orders") {
-//
-//        get("/ping") {
-//            call.respond(HttpStatusCode.OK, mapOf("message" to "OrderRoute is working"))
-//        }
-//
-//        post {
-//            val principal = call.principal<JWTPrincipal>()
-//            val userId = principal?.getClaim("userId", String::class)
-//                ?: return@post call.respond(HttpStatusCode.Unauthorized, "Unauthorized")
-//
-//            val request = call.receive<OrderRequest>()
-//            val orderEntity = request.toEntity(userId)
-//            val orderId = orderService.placeOrder(orderEntity)
-//            call.respond(HttpStatusCode.Created, mapOf("orderId" to orderId))
-//        }
-//
-//        get {
-//            val principal = call.principal<JWTPrincipal>()
-//            val userId = principal?.getClaim("userId", String::class)
-//                ?: return@get call.respond(HttpStatusCode.Unauthorized, "Unauthorized")
-//
-//            val orders = orderService.getOrdersByUser(userId)
-//            val response = orders.map {
-//                OrderResponse(
-//                    orderId = it.orderId,
-//                    totalPrice = it.totalPrice,
-//                    status = it.status,
-//                    createdAt = it.createdAt,
-//                    items = it.items.map { item ->
-//                        OrderItemResponse(
-//                            productId = item.productId,
-//                            quantity = item.quantity,
-//                            price = item.price
-//                        )
-//                    }
-//                )
-//            }
-//            call.respond(HttpStatusCode.OK, response)
-//        }
-//
-//        put("/cancel/{orderId}") {
-//            val principal = call.principal<JWTPrincipal>()
-//            val userId = principal?.getClaim("userId", String::class)
-//                ?: return@put call.respond(HttpStatusCode.Unauthorized, "Unauthorized")
-//
-//            val orderId = call.parameters["orderId"] ?: return@put call.respond(
-//                HttpStatusCode.BadRequest, "Order ID is required"
-//            )
-//
-//            val success = orderService.cancelOrder(orderId, userId)
-//            if (success) {
-//                call.respond(HttpStatusCode.OK, "Order cancelled")
-//            } else {
-//                call.respond(HttpStatusCode.BadRequest, "Cannot cancel this order")
-//            }
-//        }
-//
-//    }
-//}
-
-
+/**
+ * Defines the HTTP routes for user order-related operations.
+ * These include placing an order, viewing user orders, and cancelling orders.
+ *
+ * Base path: /orders
+ */
 fun Route.orderRoutes(orderUseCase: OrderUseCase) {
+    // Initialize the OrderController with the required use case
     val controller = OrderController(orderUseCase)
 
+    // Define all routes under the "/orders" path
     route("/orders") {
+
+        // Health check route to verify that order routing is functional
         get("/ping") { controller.ping(call) }
 
+        // Place a new order for the authenticated user
         post { controller.placeOrder(call) }
-        get { controller.getOrders(call) }
-        put("/cancel/{orderId}") { controller.cancelOrder(call) }
 
+        // Get all orders placed by the authenticated user
+        get { controller.getOrders(call) }
+
+        // Cancel a specific order by ID, if it's in a cancellable state
+        put("/cancel/{orderId}") { controller.cancelOrder(call) }
     }
 }

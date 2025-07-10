@@ -12,10 +12,22 @@ import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 
+/**
+ * Controller to handle user cart-related actions like:
+ * - Add item to cart
+ * - Get user cart
+ * - Update cart item
+ * - Delete cart item
+ */
 class CartController(
     private val cartUseCase: CartUseCase
 ) {
 
+    /**
+     * Adds a product to the user's cart.
+     * Requires a valid JWT token with `userId` claim.
+     * Body: CartRequest (productId, quantity)
+     */
     suspend fun addCart(call: ApplicationCall) {
         val userId = call.principal<JWTPrincipal>()?.getClaim("userId", String::class)
         if (userId == null) {
@@ -29,6 +41,11 @@ class CartController(
         call.respond(HttpStatusCode.Created, mapOf("cartId" to result))
     }
 
+    /**
+     * Retrieves the current user's cart with product details.
+     * Requires a valid JWT token with `userId` claim.
+     * Returns a list of cart items.
+     */
     suspend fun getCart(call: ApplicationCall) {
         val userId = call.principal<JWTPrincipal>()?.getClaim("userId", String::class)
         if (userId == null) {
@@ -40,6 +57,11 @@ class CartController(
         call.respond(HttpStatusCode.OK, cartList.map { it.toResponse() })
     }
 
+    /**
+     * Updates quantity of a cart item.
+     * Path param: cartId
+     * Body: CartUpdateRequest (quantity)
+     */
     suspend fun updateCart(call: ApplicationCall) {
         val cartId = call.parameters["cartId"]
         if (cartId == null) {
@@ -58,6 +80,10 @@ class CartController(
         }
     }
 
+    /**
+     * Deletes a cart item by its ID.
+     * Path param: cartId
+     */
     suspend fun deleteCart(call: ApplicationCall) {
         val cartId = call.parameters["cartId"]
         if (cartId == null) {
@@ -73,6 +99,10 @@ class CartController(
         }
     }
 
+    /**
+     * Health check endpoint for the cart route.
+     * Can be used to confirm routing works.
+     */
     suspend fun ping(call: ApplicationCall) {
         call.respond(mapOf("message" to "Cart route is working"))
     }
