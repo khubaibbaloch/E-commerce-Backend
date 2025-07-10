@@ -23,11 +23,11 @@ import com.commerce.domain.common.auth.service.AuthService
 import com.commerce.domain.common.auth.usecase.AuthUseCase
 import com.commerce.domain.common.auth.usecase.LoginUseCase
 import com.commerce.domain.common.auth.usecase.RegisterAndReturnUserIdUseCase
-import com.commerce.domain.cart.repository.CartRepository
-import com.commerce.domain.cart.service.CartService
-import com.commerce.domain.cart.usecase.AddCartUseCase
-import com.commerce.domain.cart.usecase.CartUseCase
-import com.commerce.domain.cart.usecase.FindCartByUserIdUseCase
+import com.commerce.domain.user.cart.repository.CartRepository
+import com.commerce.domain.user.cart.service.CartService
+import com.commerce.domain.user.cart.usecase.AddCartUseCase
+import com.commerce.domain.user.cart.usecase.CartUseCase
+import com.commerce.domain.user.cart.usecase.FindCartByUserIdUseCase
 import com.commerce.domain.order.repository.OrderRepository
 import com.commerce.domain.order.service.OrderService
 import com.commerce.domain.order.usecase.OrderUseCase

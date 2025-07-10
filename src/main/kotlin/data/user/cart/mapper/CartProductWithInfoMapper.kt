@@ -1,7 +1,7 @@
 package com.commerce.data.user.cart.mapper
 
 import com.commerce.data.user.cart.dto.CartResponse
-import com.commerce.domain.cart.model.CartWithProductInfo
+import com.commerce.domain.user.cart.model.CartWithProductInfo
 
 /**
  * Extension function to map domain-level CartWithProductInfo

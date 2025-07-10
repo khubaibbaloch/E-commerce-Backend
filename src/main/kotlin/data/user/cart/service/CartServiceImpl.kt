@@ -1,10 +1,10 @@
 package com.commerce.data.user.cart.service
 
-import com.commerce.domain.cart.model.CartEntity
-import com.commerce.domain.cart.model.CartUpdateEntity
-import com.commerce.domain.cart.model.CartWithProductInfo
-import com.commerce.domain.cart.repository.CartRepository
-import com.commerce.domain.cart.service.CartService
+import com.commerce.domain.user.cart.model.CartEntity
+import com.commerce.domain.user.cart.model.CartUpdateEntity
+import com.commerce.domain.user.cart.model.CartWithProductInfo
+import com.commerce.domain.user.cart.repository.CartRepository
+import com.commerce.domain.user.cart.service.CartService
 
 /**
  * Service implementation for managing user cart operations.

@@ -1,7 +1,7 @@
 package com.commerce.data.user.cart.mapper
 
 import com.commerce.data.user.cart.dto.CartRequest
-import com.commerce.domain.cart.model.CartEntity
+import com.commerce.domain.user.cart.model.CartEntity
 
 /**
  * Maps the CartRequest DTO (received from client) to a domain-level CartEntity.

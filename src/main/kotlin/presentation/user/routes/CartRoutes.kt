@@ -1,6 +1,6 @@
 package com.commerce.presentation.user.routes
 
-import com.commerce.domain.cart.usecase.CartUseCase
+import com.commerce.domain.user.cart.usecase.CartUseCase
 import io.ktor.server.routing.*
 import com.commerce.presentation.user.controllers.CartController
 

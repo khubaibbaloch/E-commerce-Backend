@@ -1,7 +1,7 @@
 package com.commerce.data.user.cart.mapper
 
 import com.commerce.data.user.cart.dto.CartUpdateRequest
-import com.commerce.domain.cart.model.CartUpdateEntity
+import com.commerce.domain.user.cart.model.CartUpdateEntity
 
 /**
  * Maps CartUpdateRequest DTO (from client) to the domain-level CartUpdateEntity.
