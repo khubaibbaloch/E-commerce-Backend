@@ -36,6 +36,8 @@ import com.commerce.domain.payment.repository.PaymentRepository
 import com.commerce.domain.payment.service.PaymentService
 import com.commerce.domain.seller.repository.SellerProductRepository
 import com.commerce.domain.seller.service.SellerProductService
+import com.commerce.domain.seller.usecase.DeleteProductByIdUseCase
+import com.commerce.domain.seller.usecase.InsertProductUseCase
 import com.commerce.domain.seller.usecase.SellerProductUseCase
 import com.commerce.domain.seller.usecase.UpdateProductByIdUseCase
 import com.commerce.domain.user.product.repository.UserProductRepository
