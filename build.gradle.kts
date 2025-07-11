@@ -61,4 +61,11 @@ dependencies {
     implementation("io.insert-koin:koin-ktor:3.5.3")
     implementation("io.insert-koin:koin-logger-slf4j:3.5.3")
 
+
+    // PostgreSQL Driver
+    implementation("org.postgresql:postgresql:42.7.1")
+
+
+    implementation("io.ktor:ktor-client-apache") // or CIO
+    implementation("io.ktor:ktor-serialization-kotlinx-json")
 }
