@@ -10,6 +10,7 @@ import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.response.*
 import kotlinx.serialization.json.Json
+import utils.GoogleHttpClient
 
 /**
  * Configures the security layer of the application.
@@ -79,15 +80,7 @@ fun Application.configSecurity() {
                 )
             }
 
-            client = HttpClient(Apache) {
-                install(ContentNegotiation) {
-                    json(Json {
-                        prettyPrint = true             // 🔍 Easy to read in logs
-                        isLenient = true               // 🧩 Accepts loose JSON format
-                        ignoreUnknownKeys = true       // ✅ Avoids failure on extra Google fields like `given_name`
-                    })
-                }
-            }
+            client = GoogleHttpClient.client
         }
     }
 }

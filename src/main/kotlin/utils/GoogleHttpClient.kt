@@ -12,7 +12,7 @@ object GoogleHttpClient {
             json(Json {
                 prettyPrint = true
                 isLenient = true
-                ignoreUnknownKeys = false // Strict mode; set to true if fields may vary
+                ignoreUnknownKeys = false
             })
         }
     }

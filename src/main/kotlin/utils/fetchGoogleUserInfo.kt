@@ -13,15 +13,7 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
 suspend fun fetchGoogleUserInfo(accessToken: String): GoogleUserInfo {
-    val client = HttpClient(Apache) {
-        install(ContentNegotiation) {
-            json(Json {
-                prettyPrint = true
-                isLenient = true
-                ignoreUnknownKeys = false // Set to false if you're matching exactly
-            })
-        }
-    }
+    val client = GoogleHttpClient.client
 
     return client.get("https://www.googleapis.com/oauth2/v2/userinfo") {
         headers {
