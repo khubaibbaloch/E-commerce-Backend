@@ -1,54 +1,92 @@
 package com.commerce.config
 
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.apache.Apache
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.http.*
+import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.response.*
+import kotlinx.serialization.json.Json
 
 /**
- * Configures JWT-based authentication for the application.
- * This function sets up the "auth-jwt" provider, which is used across the app for protected routes.
+ * Configures the security layer of the application.
+ * Includes:
+ * ✅ JWT-based Authentication (for protected API access)
+ * ✅ Google OAuth2 Authentication (for social login)
  */
 fun Application.configSecurity() {
-    // Initialize JWT configuration (loads secret, issuer, etc.)
+    // 🔐 Initialize JWT configuration (loads secret, issuer, etc.)
     JwtConfig.init(this)
 
-    // Install Ktor's Authentication plugin with JWT provider
+    // 🔐 Install Ktor's Authentication plugin
     install(Authentication) {
+
+        // -------------------- JWT AUTH --------------------
         jwt("auth-jwt") {
-            // Realm is used in the WWW-Authenticate header (typically browser-level)
+            // Used in the WWW-Authenticate header
             realm = JwtConfig.realm
 
-            // Set the JWT verifier used to validate incoming tokens
+            // Set verifier to check the token signature and expiration
             verifier(JwtConfig.verifier)
 
             /**
-             * Validate incoming JWT credentials.
-             * Only allow requests where both `userId` and `role` claims exist and are non-blank.
+             * Validate JWT claims.
+             * Allow only if both `userId` and `role` claims are present and not blank.
              */
             validate { credential ->
                 val userId = credential.payload.getClaim("userId").asString()
                 val role = credential.payload.getClaim("role").asString()
 
                 if (!userId.isNullOrBlank() && !role.isNullOrBlank()) {
-                    // If both userId and role are valid, proceed with the request
                     JWTPrincipal(credential.payload)
                 } else {
-                    // Otherwise, authentication fails
                     null
                 }
             }
 
             /**
-             * Handle cases where JWT is missing, invalid, or expired.
-             * Responds with HTTP 401 Unauthorized and a custom error message.
+             * Return 401 Unauthorized if JWT is invalid or missing.
              */
             challenge { _, _ ->
                 call.respond(
                     HttpStatusCode.Unauthorized,
                     mapOf("error" to "Token is not valid or has expired")
                 )
+            }
+        }
+
+        // -------------------- GOOGLE OAUTH AUTH --------------------
+        /**
+         * ✅ Google OAuth 2.0 Authentication
+         * Used for signing in with Google accounts.
+         * After successful login, it redirects to /auth/oauth/google/callback
+         */
+        oauth("google-oauth") {
+            urlProvider = { "http://localhost:8080/auth/oauth/google/callback" }
+
+            providerLookup = {
+                OAuthServerSettings.OAuth2ServerSettings(
+                    name = "google",
+                    authorizeUrl = "https://accounts.google.com/o/oauth2/auth",
+                    accessTokenUrl = "https://oauth2.googleapis.com/token",
+                    requestMethod = HttpMethod.Post,
+                    clientId = "1046768830009-r4mvkipmeg109c9lah9ptjh1c696re1s.apps.googleusercontent.com",
+                    clientSecret = "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",
+                    defaultScopes = listOf("profile", "email")
+                )
+            }
+
+            client = HttpClient(Apache) {
+                install(ContentNegotiation) {
+                    json(Json {
+                        prettyPrint = true             // 🔍 Easy to read in logs
+                        isLenient = true               // 🧩 Accepts loose JSON format
+                        ignoreUnknownKeys = true       // ✅ Avoids failure on extra Google fields like `given_name`
+                    })
+                }
             }
         }
     }
