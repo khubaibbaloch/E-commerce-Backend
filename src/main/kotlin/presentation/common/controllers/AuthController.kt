@@ -4,37 +4,26 @@ import com.commerce.config.JwtConfig
 import com.commerce.data.common.auth.dto.UserRequest
 import com.commerce.data.common.auth.mapper.toDomain
 import com.commerce.domain.common.auth.usecase.AuthUseCase
+import domain.common.auth.model.GoogleUserInfo
 import domain.common.auth.model.UserRole
-import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.engine.apache.Apache
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.request.get
-import io.ktor.client.request.headers
-import io.ktor.http.*
-import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.*
 import io.ktor.server.auth.OAuthAccessTokenResponse
 import io.ktor.server.auth.principal
 import io.ktor.server.request.*
 import io.ktor.server.response.*
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
+import io.ktor.http.*
+import utils.fetchGoogleUserInfo
 
 /**
  * Controller class responsible for handling authentication-related operations.
- * Handles user registration (sign up) and login functionality.
+ * Handles user registration (sign up), role-based login, and Google OAuth login.
  *
  * @param authUseCase Contains use cases for registering and logging in a user.
  */
 class AuthController(private val authUseCase: AuthUseCase) {
 
     /**
-     * Handles user registration.
-     * - Receives the request payload as a UserRequest.
-     * - Converts it to a domain model using `toDomain()`.
-     * - Calls the `registerUseCase` to store user in DB.
-     * - Responds with appropriate message based on registration success/failure.
+     * Handles user registration via traditional email/password.
      */
     suspend fun signUp(call: ApplicationCall) {
         val request = call.receive<UserRequest>()        // Parse request body
@@ -52,13 +41,8 @@ class AuthController(private val authUseCase: AuthUseCase) {
     }
 
     /**
-     * Handles user login.
-     * - Receives the login request payload.
-     * - Verifies user credentials using `loginUseCase`.
-     * - If valid, generates a JWT token with user ID and role.
-     * - Returns token to client on success, else responds with error.
-     *
-     * @param role The role to be embedded in the JWT token (e.g., USER, SELLER, ADMIN)
+     * Handles login for User, Seller, and Admin roles.
+     * Generates JWT token if login succeeds.
      */
     suspend fun login(call: ApplicationCall, role: UserRole) {
         val request = call.receive<UserRequest>()        // Parse login credentials
@@ -66,56 +50,45 @@ class AuthController(private val authUseCase: AuthUseCase) {
         val userId = authUseCase.loginUseCase(user)      // Authenticate user
 
         if (userId != null) {
-            val token = JwtConfig.generateToken(userId, role) // Generate JWT with role
+            val token = JwtConfig.generateToken(userId, role) // Generate JWT with userId + role
             call.respond(HttpStatusCode.OK, mapOf("token" to token))
         } else {
             call.respond(HttpStatusCode.Unauthorized, "Invalid credentials")
         }
     }
 
-    suspend fun googleSignUp(call: ApplicationCall){
+    /**
+     * Handles Google OAuth Sign-in or Sign-up.
+     * - Extracts OAuth token from Google
+     * - Fetches user info from Google API
+     * - Returns structured user info (or optionally logs in/registers in your system)
+     */
+    suspend fun googleSignUp(call: ApplicationCall) {
         val principal = call.principal<OAuthAccessTokenResponse.OAuth2>()
         val accessToken = principal?.accessToken
 
-        if (accessToken != null) {
-            val client = HttpClient(Apache) {
-                install(ContentNegotiation) {
-                    json(Json {
-                        prettyPrint =
-                            true   // Formats the JSON output for readability (useful during development)
-                        isLenient =
-                            true     // Allows parsing of non-strict JSON (e.g., missing quotes or unquoted keys)
-                        ignoreUnknownKeys = true
-                    })
-                }
-            }
+        if (accessToken == null) {
+            call.respond(HttpStatusCode.Unauthorized, mapOf("error" to "OAuth failed."))
+            return
+        }
 
-            // 🔄 Call Google to get user info
-            val userInfo: GoogleUserInfo = client.get("https://www.googleapis.com/oauth2/v2/userinfo") {
-                headers {
-                    append(HttpHeaders.Authorization, "Bearer $accessToken")
-                }
-            }.body()
+        try {
+            // Fetch Google user info using reusable HttpClient
+            val userInfo = fetchGoogleUserInfo(accessToken)
 
+            // TODO: Check DB if user exists → If not, register → If exists, return token
+            // val jwt = JwtConfig.generateToken(userInfo.id, UserRole.USER)
+            // call.respond(HttpStatusCode.OK, mapOf("token" to jwt))
 
-            // 🎯 Handle sign-up or login by email
-            val user = userInfo
+            // Temporary response (raw Google user info)
+            call.respond(HttpStatusCode.OK, userInfo)
 
-            // 🎫 Issue your app’s JWT for the user
-             //val jwt = JwtConfig.generateToken(user.id, UserRole.USER)
-            call.respond(mapOf("id" to user.id))
-        } else {
-            call.respond(HttpStatusCode.Unauthorized, "OAuth failed.")
+        } catch (e: Exception) {
+            e.printStackTrace()
+            call.respond(
+                HttpStatusCode.InternalServerError,
+                mapOf("error" to "Failed to fetch user info")
+            )
         }
     }
 }
-@Serializable
-data class GoogleUserInfo(
-    val id: String,
-    val email: String,
-    val verified_email: Boolean,
-    val name: String,
-    val given_name: String,
-    val family_name: String,
-    val picture: String,
-)
