@@ -42,6 +42,8 @@ import com.commerce.domain.seller.usecase.SellerProductUseCase
 import com.commerce.domain.seller.usecase.UpdateProductByIdUseCase
 import com.commerce.domain.user.product.repository.UserProductRepository
 import com.commerce.domain.user.product.service.UserProductService
+import com.zaxxer.hikari.HikariConfig
+import com.zaxxer.hikari.HikariDataSource
 import domain.user.cart.usecase.DeleteCartUseCase
 import domain.user.cart.usecase.UpdateCartUseCase
 import domain.user.order.usecase.CancelOrderUseCase
@@ -60,16 +62,41 @@ import org.koin.dsl.module
  */
 fun appModule(env: ApplicationEnvironment) = module {
 
-    // -------------------- DATABASE --------------------
-    // Bind a singleton instance of the Exposed SQL database using environment config
+    // -------------------- DATABASE CONFIG --------------------
+
+    /**
+     * 🗃️ Previous local file-based (or H2) database config (Deprecated)
+     * Commented out: using hardcoded config values from application.conf
+     */
+//    single<Database> {
+//        Database.connect(
+//            url = env.config.property("database.url").getString(),
+//            driver = env.config.property("database.driver").getString(),
+//            user = env.config.property("database.user").getString(),
+//            password = env.config.property("database.password").getString()
+//        )
+//    }
+
+    /**
+     * 🐘 New PostgreSQL Configuration using HikariCP (connection pooling)
+     * Uses a local Postgres instance with username/password
+     * Make sure PostgreSQL is running and DB "commerce" is created
+     */
     single<Database> {
-        Database.connect(
-            url = env.config.property("database.url").getString(),
-            driver = env.config.property("database.driver").getString(),
-            user = env.config.property("database.user").getString(),
-            password = env.config.property("database.password").getString()
-        )
+        val config = HikariConfig().apply {
+            jdbcUrl = "jdbc:postgresql://localhost:5432/commerce" // 🛠️ Your DB name
+            driverClassName = "org.postgresql.Driver"
+            username = "postgres"                                 // 🔐 Your DB username
+            password = "Khubaib@301030"                            // 🔐 Your DB password
+            maximumPoolSize = 5                                    // 🔄 Max simultaneous connections
+            isAutoCommit = false                                   // 🔁 Manual transaction control
+            transactionIsolation = "TRANSACTION_REPEATABLE_READ"  // 🧾 Isolation level
+        }
+
+        val dataSource = HikariDataSource(config)
+        Database.connect(dataSource)
     }
+
 
     // -------------------- AUTH --------------------
     // Auth Repository and Service
