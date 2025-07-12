@@ -1,16 +1,11 @@
 package com.commerce.config
 
-import io.ktor.client.HttpClient
-import io.ktor.client.engine.apache.Apache
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.http.*
-import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.response.*
-import kotlinx.serialization.json.Json
-import utils.GoogleHttpClient
+import utils.HttpClientHelper
 
 /**
  * Configures the security layer of the application.
@@ -80,7 +75,7 @@ fun Application.configSecurity() {
                 )
             }
 
-            client = GoogleHttpClient.client
+            client = HttpClientHelper.client
         }
     }
 }

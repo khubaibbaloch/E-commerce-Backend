@@ -6,7 +6,7 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
-object GoogleHttpClient {
+object HttpClientHelper {
     val client: HttpClient = HttpClient(Apache) {
         install(ContentNegotiation) {
             json(Json {
