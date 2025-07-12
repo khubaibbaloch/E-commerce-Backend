@@ -10,7 +10,7 @@ import io.ktor.client.request.headers
 import io.ktor.http.*
 
 suspend fun fetchGoogleUserInfo(accessToken: String): GoogleUserInfo {
-    val client = HttpClient.client
+    val client = HttpClientHelper.client
 
     return client.get("https://www.googleapis.com/oauth2/v2/userinfo") {
         headers {
