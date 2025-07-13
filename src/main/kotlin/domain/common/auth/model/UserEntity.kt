@@ -11,5 +11,6 @@ package com.commerce.domain.common.auth.model
  */
 data class UserEntity(
     val username: String,
+    val email: String,
     val password: String
 )

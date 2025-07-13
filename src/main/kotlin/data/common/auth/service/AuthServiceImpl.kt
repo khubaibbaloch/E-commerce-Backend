@@ -17,7 +17,7 @@ class AuthServiceImpl(private val repository: AuthRepository) : AuthService {
      * @return The newly created user's ID, or null if the username already exists.
      */
     override suspend fun registerAndReturnUserId(userEntity: UserEntity): String? {
-        val existing = repository.findUser(userEntity.username)
+        val existing = repository.findUser(userEntity.email)
         return if (existing != null) null else repository.insertUser(userEntity)
     }
 

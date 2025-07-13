@@ -1,5 +1,6 @@
 package com.commerce.data.common.auth.repository
 
+import com.commerce.data.common.auth.table.EmailVerificationsTable
 import com.commerce.data.common.auth.table.UsersTable
 import com.commerce.domain.common.auth.model.UserEntity
 import com.commerce.domain.common.auth.repository.AuthRepository
@@ -19,8 +20,10 @@ class AuthRepositoryImpl(private val database: Database) : AuthRepository {
         transaction(database) {
             // Ensures UsersTable is created in the database (run only on app startup)
             // SchemaUtils.drop(UsersTable)  // Uncomment for debugging DB reset
-            SchemaUtils.create(UsersTable)
+            SchemaUtils.create(UsersTable, EmailVerificationsTable)
         }
+
+
     }
 
     /**
@@ -33,6 +36,7 @@ class AuthRepositoryImpl(private val database: Database) : AuthRepository {
         UsersTable.insert {
             it[userid] = generatedUUID
             it[username] = userEntity.username
+            it[email] = userEntity.email
             it[password] = userEntity.password // Store hashed password if hashing applied upstream
         }
         generatedUUID
@@ -41,12 +45,16 @@ class AuthRepositoryImpl(private val database: Database) : AuthRepository {
     /**
      * Finds a user by username.
      * Used primarily for login validation.
-     * @param username The username to search.
+     * @param usernameOrEmail The username to search.
      * @return The corresponding ResultRow if found, else null.
      */
-    override suspend fun findUser(username: String): ResultRow? = dbQuery {
-        UsersTable.select { UsersTable.username eq username }.singleOrNull()
+    override suspend fun findUser(usernameOrEmail: String): ResultRow? = dbQuery {
+        UsersTable.select {
+            (UsersTable.username eq usernameOrEmail) or
+                    (UsersTable.email eq usernameOrEmail)
+        }.singleOrNull()
     }
+
 
     /**
      * Helper function to execute DB queries on IO dispatcher in coroutine-safe way.

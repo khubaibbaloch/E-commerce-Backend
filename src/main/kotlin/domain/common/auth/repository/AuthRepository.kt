@@ -12,10 +12,10 @@ interface AuthRepository {
     /**
      * Finds a user in the database by their username.
      *
-     * @param username The username to search for.
+     * @param usernameOrEmail The username to search for.
      * @return A [ResultRow] containing user data if found, or null if not.
      */
-    suspend fun findUser(username: String): ResultRow?
+    suspend fun findUser(usernameOrEmail: String): ResultRow?
 
     /**
      * Inserts a new user into the database.

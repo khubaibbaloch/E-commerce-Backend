@@ -17,6 +17,8 @@ object UsersTable : Table("users") {
     // Username used for login; must be unique
     val username = varchar("username", 50).uniqueIndex()
 
+    val email = varchar("email", 50).uniqueIndex()
+
     // Hashed password string (length 64 for SHA-256, adjust if using other hashing)
     val password = varchar("password", 64)
 

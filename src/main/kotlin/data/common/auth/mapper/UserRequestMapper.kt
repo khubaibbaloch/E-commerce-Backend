@@ -10,6 +10,7 @@ import com.commerce.domain.common.auth.model.UserEntity
 fun UserRequest.toDomain(): UserEntity {
     return UserEntity(
         username = this.username,  // Maps DTO username to domain model
+        email = this.email,
         password = this.password   // Maps DTO password to domain model (plain or hashed later)
     )
 }

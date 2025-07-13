@@ -9,5 +9,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class UserRequest(
     val username: String,  // The username provided by the client
+    val email:String,
     val password: String   // The corresponding password (should be hashed/stored securely)
 )

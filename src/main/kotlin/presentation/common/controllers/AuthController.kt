@@ -13,6 +13,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.http.*
 import utils.fetchGoogleUserInfo
+import utils.generateOTP
 
 /**
  * Controller class responsible for handling authentication-related operations.
@@ -91,4 +92,13 @@ class AuthController(private val authUseCase: AuthUseCase) {
             )
         }
     }
+
+    suspend fun verifyEmailWithOtp(){
+        val email = "balochkhubaib711@gmail.com"
+        val otp = generateOTP()
+        val expiry = java.time.LocalDateTime.now().plusMinutes(15)
+    }
+
+    suspend fun verifyEmailWithLink(){}
+
 }
