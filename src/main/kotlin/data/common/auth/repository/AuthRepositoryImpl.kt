@@ -2,6 +2,7 @@ package com.commerce.data.common.auth.repository
 
 import com.commerce.data.common.auth.table.EmailVerificationsTable
 import com.commerce.data.common.auth.table.UsersTable
+import com.commerce.domain.common.auth.model.EmailVerificationEntity
 import com.commerce.domain.common.auth.model.UserEntity
 import com.commerce.domain.common.auth.repository.AuthRepository
 import kotlinx.coroutines.Dispatchers
@@ -41,6 +42,35 @@ class AuthRepositoryImpl(private val database: Database) : AuthRepository {
         }
         generatedUUID
     }
+
+    override suspend fun insertEmailVerification(entity: EmailVerificationEntity): String = dbQuery {
+        EmailVerificationsTable.insert {
+            it[userId] = entity.userId
+            it[email] = entity.email
+            it[tokenOrOtp] = entity.tokenOrOtp
+            it[expiresAt] = entity.expiresAt
+            it[verified] = entity.verified
+        }
+
+        entity.userId
+    }
+
+    override suspend fun getEmailVerification(userId: String): EmailVerificationEntity? = dbQuery {
+        EmailVerificationsTable
+            .select { EmailVerificationsTable.userId eq userId }
+            .map {
+                EmailVerificationEntity(
+                    userId = it[EmailVerificationsTable.userId],
+                    email = it[EmailVerificationsTable.email],
+                    tokenOrOtp = it[EmailVerificationsTable.tokenOrOtp],
+                    expiresAt = it[EmailVerificationsTable.expiresAt],
+                    verified = it[EmailVerificationsTable.verified]
+                )
+            }
+            .singleOrNull()
+    }
+
+
 
     /**
      * Finds a user by username.
