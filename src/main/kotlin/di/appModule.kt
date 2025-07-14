@@ -21,6 +21,7 @@ import com.commerce.domain.admin.usecase.GetAllUserUseCase
 import com.commerce.domain.common.auth.repository.AuthRepository
 import com.commerce.domain.common.auth.service.AuthService
 import com.commerce.domain.common.auth.usecase.AuthUseCase
+import com.commerce.domain.common.auth.usecase.GetEmailVerificationUseCase
 import com.commerce.domain.common.auth.usecase.LoginUseCase
 import com.commerce.domain.common.auth.usecase.RegisterAndReturnUserIdUseCase
 import com.commerce.domain.user.cart.repository.CartRepository
@@ -44,6 +45,8 @@ import com.commerce.domain.user.product.repository.UserProductRepository
 import com.commerce.domain.user.product.service.UserProductService
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
+import domain.common.auth.usecase.MarkEmailAsVerifiedUseCase
+import domain.common.auth.usecase.UpsertEmailVerificationUseCase
 import domain.user.cart.usecase.DeleteCartUseCase
 import domain.user.cart.usecase.UpdateCartUseCase
 import domain.user.order.usecase.CancelOrderUseCase
@@ -78,109 +81,112 @@ fun appModule(env: ApplicationEnvironment) = module {
 //    }
 
     /**
-     * 🐘 New PostgreSQL Configuration using HikariCP (connection pooling)
-     * Uses a local Postgres instance with username/password
-     * Make sure PostgreSQL is running and DB "commerce" is created
+     * 🐘 PostgreSQL Configuration using HikariCP (connection pooling)
+     * Ensures efficient DB connections for production usage
      */
     single<Database> {
         val config = HikariConfig().apply {
-            jdbcUrl = "jdbc:postgresql://localhost:5432/commerce" // 🛠️ Your DB name
+            jdbcUrl = "jdbc:postgresql://localhost:5432/commerce" // 🛠️ DB name
             driverClassName = "org.postgresql.Driver"
             username = "postgres"                                 // 🔐 Your DB username
             password = "Khubaib@301030"                            // 🔐 Your DB password
-            maximumPoolSize = 5                                    // 🔄 Max simultaneous connections
-            isAutoCommit = false                                   // 🔁 Manual transaction control
-            transactionIsolation = "TRANSACTION_REPEATABLE_READ"  // 🧾 Isolation level
+            maximumPoolSize = 5                                    // Max simultaneous DB connections
+            isAutoCommit = false                                   // Manual transaction control
+            transactionIsolation = "TRANSACTION_REPEATABLE_READ"  // Prevents dirty reads
         }
-
         val dataSource = HikariDataSource(config)
         Database.connect(dataSource)
     }
 
-
     // -------------------- AUTH --------------------
-    // Auth Repository and Service
+    // Repositories & Services
     single<AuthRepository> { AuthRepositoryImpl(get()) }
     single<AuthService> { AuthServiceImpl(get()) }
 
-    // Auth Use Cases
+    // Use Cases (individual responsibilities)
     factory { RegisterAndReturnUserIdUseCase(get()) }
     factory { LoginUseCase(get()) }
+    factory { GetEmailVerificationUseCase(get()) }
+    factory { UpsertEmailVerificationUseCase(get()) }
+    factory { MarkEmailAsVerifiedUseCase(get()) } // ✅ Added: Marks email as verified after OTP
 
-    // Grouped Auth UseCase (container)
-    single { AuthUseCase(get(), get()) }
+    // Use Case Group for Auth domain
+    single {
+        AuthUseCase(
+            get(), // Register
+            get(), // Login
+            get(), // Get Verification
+            get(), // Upsert Verification
+            get()  // ✅ Added: Mark Email Verified
+        )
+    }
 
     // -------------------- USER: PRODUCT --------------------
-    // Product search and retrieval for users
+    // Repositories & Services
     single<UserProductRepository> { UserProductRepositoryImpl(get()) }
     single<UserProductService> { UserProductServiceImpl(get()) }
 
-    // User Product Use Cases
+    // Use Cases
     factory { FindProductByNameUseCase(get()) }
     factory { GetAllProductsUseCase(get()) }
-    factory { InsertProductUseCase(get()) }              // (Optional use for seller/admin)
-    factory { UpdateProductByIdUseCase(get()) }          // (Optional use for seller/admin)
-    factory { DeleteProductByIdUseCase(get()) }          // (Optional use for seller/admin)
+    factory { InsertProductUseCase(get()) }              // Also used by Seller/Admin
+    factory { UpdateProductByIdUseCase(get()) }
+    factory { DeleteProductByIdUseCase(get()) }
 
-    // Grouped User Product UseCase
+    // Use Case Group for user product browsing
     single { UserProductUseCase(get(), get()) }
 
     // -------------------- USER: CART --------------------
     single<CartRepository> { CartRepositoryImpl(get()) }
     single<CartService> { CartServiceImpl(get()) }
 
-    // Cart Use Cases
     factory { AddCartUseCase(get()) }
     factory { FindCartByUserIdUseCase(get()) }
     factory { DeleteCartUseCase(get()) }
     factory { UpdateCartUseCase(get()) }
 
-    // Grouped Cart UseCase
+    // Use Case Group for managing user cart
     single { CartUseCase(get(), get(), get(), get()) }
 
     // -------------------- USER: ORDER --------------------
     single<OrderRepository> { OrderRepositoryImpl(get()) }
     single<OrderService> { OrderServiceImpl(get()) }
 
-    // Order Use Cases
     factory { CancelOrderUseCase(get()) }
     factory { GetOrdersByUserUseCase(get()) }
     factory { PlaceOrderUseCase(get()) }
 
-    // Grouped Order UseCase
+    // Use Case Group for order management
     single { OrderUseCase(get(), get(), get()) }
 
     // -------------------- USER: PAYMENT --------------------
     single<PaymentRepository> { PaymentRepositoryImpl(get()) }
     single<PaymentService> { PaymentServiceImpl(get(), get()) }
 
-    // Payment Use Cases
     factory { CreatePaymentUseCase(get()) }
     factory { GetPaymentsUseCase(get()) }
 
-    // Grouped Payment UseCase
+    // Use Case Group for handling payments
     single { PaymentUseCase(get(), get()) }
 
     // -------------------- ADMIN --------------------
     single<AdminRepository> { AdminRepositoryImpl(get()) }
     single<AdminService> { AdminServiceImpl(get()) }
 
-    // Admin Use Cases
     factory { GetAllUserUseCase(get()) }
-    factory { GetAllProductsUseCase(get()) }
+    factory { GetAllProductsUseCase(get()) } // ✅ Added for admin product access
 
-    // Grouped Admin UseCase
+    // Admin Use Case Group
     single { AdminUseCase(get(), get()) }
 
     // -------------------- SELLER --------------------
     single<SellerProductRepository> { SellerProductRepositoryImpl(get()) }
     single<SellerProductService> { SellerProductServiceImpl(get()) }
 
-    // Seller Product Use Cases
     factory { InsertProductUseCase(get()) }
     factory { UpdateProductByIdUseCase(get()) }
     factory { DeleteProductByIdUseCase(get()) }
 
-    // Grouped Seller Product UseCase
+    // Seller Use Case Group
     single { SellerProductUseCase(get(), get(), get()) }
 }
