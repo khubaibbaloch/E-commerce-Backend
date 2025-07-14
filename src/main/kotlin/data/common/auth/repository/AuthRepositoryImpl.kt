@@ -19,16 +19,14 @@ class AuthRepositoryImpl(private val database: Database) : AuthRepository {
 
     init {
         transaction(database) {
-            // Ensures UsersTable is created in the database (run only on app startup)
-            // SchemaUtils.drop(UsersTable)  // Uncomment for debugging DB reset
+            // ✅ Automatically creates the Users and EmailVerifications tables if they don’t exist
+            // SchemaUtils.drop(EmailVerificationsTable) // Uncomment only for development DB reset
             SchemaUtils.create(UsersTable, EmailVerificationsTable)
         }
-
-
     }
 
     /**
-     * Inserts a new user into the database.
+     * Inserts a new user into the database with a generated UUID.
      * @param userEntity The domain-level user entity.
      * @return The generated unique user ID.
      */
@@ -38,23 +36,40 @@ class AuthRepositoryImpl(private val database: Database) : AuthRepository {
             it[userid] = generatedUUID
             it[username] = userEntity.username
             it[email] = userEntity.email
-            it[password] = userEntity.password // Store hashed password if hashing applied upstream
+            it[password] = userEntity.password // ⚠️ Assumes password is already hashed
         }
         generatedUUID
     }
 
-    override suspend fun insertEmailVerification(entity: EmailVerificationEntity): String = dbQuery {
-        EmailVerificationsTable.insert {
+    /**
+     * Inserts or updates an email verification entry based on userId.
+     * @param entity The verification domain model.
+     * @return The userId after upsert operation.
+     */
+    override suspend fun upsertEmailVerification(entity: EmailVerificationEntity): String = dbQuery {
+        EmailVerificationsTable.upsert(
+            keys = arrayOf(EmailVerificationsTable.userId), // 🔑 Conflict on userId
+            onUpdate = listOf(
+                EmailVerificationsTable.tokenOrOtp to stringLiteral(entity.tokenOrOtp),
+                EmailVerificationsTable.expiresAt to stringLiteral(entity.expiresAt),
+                EmailVerificationsTable.verified to booleanLiteral(entity.verified),
+                EmailVerificationsTable.email to stringLiteral(entity.email)
+            )
+        ) {
             it[userId] = entity.userId
             it[email] = entity.email
             it[tokenOrOtp] = entity.tokenOrOtp
             it[expiresAt] = entity.expiresAt
             it[verified] = entity.verified
         }
-
         entity.userId
     }
 
+    /**
+     * Retrieves the email verification entry for the given user.
+     * @param userId The user's unique identifier.
+     * @return EmailVerificationEntity or null if not found.
+     */
     override suspend fun getEmailVerification(userId: String): EmailVerificationEntity? = dbQuery {
         EmailVerificationsTable
             .select { EmailVerificationsTable.userId eq userId }
@@ -70,13 +85,22 @@ class AuthRepositoryImpl(private val database: Database) : AuthRepository {
             .singleOrNull()
     }
 
-
+    /**
+     * Marks a user's email verification as complete (verified = true).
+     * @param userId The ID of the user.
+     * @return True if update affected at least one row.
+     */
+    override suspend fun markEmailAsVerified(userId: String): Boolean = dbQuery {
+        val updatedRows = EmailVerificationsTable.update({ EmailVerificationsTable.userId eq userId }) {
+            it[verified] = true
+        }
+        updatedRows > 0 // ✅ true if update succeeded
+    }
 
     /**
-     * Finds a user by username.
-     * Used primarily for login validation.
-     * @param usernameOrEmail The username to search.
-     * @return The corresponding ResultRow if found, else null.
+     * Finds a user by username or email. Used during login.
+     * @param usernameOrEmail The input credential (username or email).
+     * @return ResultRow if a match is found, else null.
      */
     override suspend fun findUser(usernameOrEmail: String): ResultRow? = dbQuery {
         UsersTable.select {
@@ -85,9 +109,9 @@ class AuthRepositoryImpl(private val database: Database) : AuthRepository {
         }.singleOrNull()
     }
 
-
     /**
-     * Helper function to execute DB queries on IO dispatcher in coroutine-safe way.
+     * Executes a suspend DB query block on the IO dispatcher using Exposed transactions.
+     * Ensures coroutine safety and non-blocking behavior.
      */
     private suspend fun <T> dbQuery(block: suspend () -> T): T =
         newSuspendedTransaction(Dispatchers.IO, database) { block() }
