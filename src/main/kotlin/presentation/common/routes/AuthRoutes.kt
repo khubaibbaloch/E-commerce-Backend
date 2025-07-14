@@ -22,7 +22,7 @@ fun Route.authRoutes(authUseCase: AuthUseCase) {
 
         /**
          * POST /auth/signUp
-         * Handles user registration using email/password.
+         * Handles user registration using email and password.
          */
         post("/signUp") {
             controller.signUp(call)
@@ -30,7 +30,7 @@ fun Route.authRoutes(authUseCase: AuthUseCase) {
 
         /**
          * POST /auth/login/user
-         * Authenticates a user and returns JWT with USER role.
+         * Authenticates a regular user and returns a JWT with USER role.
          */
         post("/login/user") {
             controller.login(call, UserRole.USER)
@@ -38,7 +38,7 @@ fun Route.authRoutes(authUseCase: AuthUseCase) {
 
         /**
          * POST /auth/login/seller
-         * Authenticates a seller and returns JWT with SELLER role.
+         * Authenticates a seller and returns a JWT with SELLER role.
          */
         post("/login/seller") {
             controller.login(call, UserRole.SELLER)
@@ -46,17 +46,35 @@ fun Route.authRoutes(authUseCase: AuthUseCase) {
 
         /**
          * POST /auth/login/admin
-         * Authenticates an admin and returns JWT with ADMIN role.
+         * Authenticates an admin and returns a JWT with ADMIN role.
          */
         post("/login/admin") {
             controller.login(call, UserRole.ADMIN)
         }
 
+        /**
+         * GET /auth/emailVerification
+         * Verifies user email through token in the query string.
+         * Triggered via verification email link.
+         */
+        get("/emailVerification") {
+            controller.verifyEmailWithLink(call)
+        }
+
+        /**
+         * POST /auth/emailVerification
+         * (Currently commented out) Would verify email using OTP.
+         */
+//        post("/emailVerification") {
+//            controller.verifyEmailWithOtp(call)
+//        }
+
         // ------------------------ Google OAuth ------------------------
 
         /**
          * GET /auth/oauth/google
-         * Initiates Google OAuth login by redirecting to Google.
+         * Initiates Google OAuth login via redirection.
+         * Handled by the Ktor OAuth plugin.
          */
         authenticate("google-oauth") {
             get("/oauth/google") {
@@ -65,8 +83,8 @@ fun Route.authRoutes(authUseCase: AuthUseCase) {
 
             /**
              * GET /auth/oauth/google/callback
-             * Handles callback from Google after user consents.
-             * Delegates token exchange & user info fetching to controller.
+             * Handles Google's callback with authorization code.
+             * Exchanges token and fetches Google user profile.
              */
             get("/oauth/google/callback") {
                 controller.googleSignUp(call)
