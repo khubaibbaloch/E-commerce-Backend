@@ -12,12 +12,25 @@ import io.ktor.client.utils.EmptyContent.contentType
 import io.ktor.http.ContentType
 import io.ktor.http.ContentType.Application.Json
 import io.ktor.http.contentType
+import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
-suspend fun sendEmail(to: String, subject: String, htmlContent: String) {
+/**
+ * Sends an HTML email using the MailerSend API.
+ *
+ * This function prepares an [EmailPayload] with the specified recipient, subject, and HTML content,
+ * then makes a POST request to the MailerSend email API endpoint.
+ *
+ * @param to The recipient email address.
+ * @param subject The subject of the email.
+ * @param htmlContent The HTML content of the email body.
+ *
+ * @return `true` if the email was sent successfully (2xx response); `false` otherwise.
+ */
+suspend fun sendEmail(to: String, subject: String, htmlContent: String): Boolean {
     val payload = EmailPayload(
-        from = EmailAddress("MS_biBfmy@test-eqvygm0j3jwl0p7w.mlsender.net"),     // Replace with verified sender
+        from = EmailAddress("MS_biBfmy@test-eqvygm0j3jwl0p7w.mlsender.net"),
         to = listOf(EmailAddress(to)),
         subject = subject,
         html = htmlContent
@@ -25,9 +38,11 @@ suspend fun sendEmail(to: String, subject: String, htmlContent: String) {
 
     val client = HttpClientHelper.client
 
-    client.post("https://api.mailersend.com/v1/email") {
+    val response = client.post("https://api.mailersend.com/v1/email") {
         header("Authorization", "Bearer mlsn.9b823f78eb6a5de23bc7d955086e03d0345017f5955eb6dbaa6d14932516e72e")
         contentType(ContentType.Application.Json)
         setBody(payload)
     }
+
+    return response.status.isSuccess()
 }
