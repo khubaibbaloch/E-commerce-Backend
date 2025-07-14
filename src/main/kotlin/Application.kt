@@ -33,7 +33,7 @@ fun Application.module() {
     configureMonitoring()
 
     // 🛑 Exception Handling and Status Code Customization
-    configureStatusPages()
+   // configureStatusPages()
 
     // 🔒 JWT Authentication and Role-Based Security
     configSecurity()
