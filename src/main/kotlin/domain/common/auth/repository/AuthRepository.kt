@@ -11,13 +11,22 @@ import org.jetbrains.exposed.sql.ResultRow
 interface AuthRepository {
 
     /**
-     * Finds a user in the database by their username.
+     * Finds a user in the database by their username or email.
+     * Used primarily for login validation.
      *
-     * @param usernameOrEmail The username to search for.
+     * @param usernameOrEmail The username or email to search.
      * @return A [ResultRow] containing user data if found, or null if not.
      */
     suspend fun findUser(usernameOrEmail: String): ResultRow?
+
+    /**
+     * Retrieves the email verification record associated with a user.
+     *
+     * @param userId The ID of the user.
+     * @return The corresponding [EmailVerificationEntity] if exists, else null.
+     */
     suspend fun getEmailVerification(userId: String): EmailVerificationEntity?
+
     /**
      * Inserts a new user into the database.
      *
@@ -25,5 +34,21 @@ interface AuthRepository {
      * @return The generated unique user ID after insertion.
      */
     suspend fun insertUser(userEntity: UserEntity): String
-    suspend fun insertEmailVerification(entity: EmailVerificationEntity): String
+
+    /**
+     * Inserts or updates an email verification record.
+     * Ensures only one verification record exists per user (upsert behavior).
+     *
+     * @param entity The verification data to insert or update.
+     * @return The userId associated with the verification record.
+     */
+    suspend fun upsertEmailVerification(entity: EmailVerificationEntity): String
+
+    /**
+     * Marks a user's email as verified by updating the corresponding flag.
+     *
+     * @param userId The ID of the user whose email is to be verified.
+     * @return True if the update was successful, false otherwise.
+     */
+    suspend fun markEmailAsVerified(userId: String): Boolean
 }
