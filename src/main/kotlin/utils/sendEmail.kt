@@ -28,21 +28,3 @@ import kotlinx.serialization.json.Json
  *
  * @return `true` if the email was sent successfully (2xx response); `false` otherwise.
  */
-suspend fun sendEmail(to: String, subject: String, htmlContent: String): Boolean {
-    val payload = EmailPayload(
-        from = EmailAddress("MS_biBfmy@test-eqvygm0j3jwl0p7w.mlsender.net"),
-        to = listOf(EmailAddress(to)),
-        subject = subject,
-        html = htmlContent
-    )
-
-    val client = HttpClientHelper.client
-
-    val response = client.post("https://api.mailersend.com/v1/email") {
-        header("Authorization", "Bearer mlsn.9b823f78eb6a5de23bc7d955086e03d0345017f5955eb6dbaa6d14932516e72e")
-        contentType(ContentType.Application.Json)
-        setBody(payload)
-    }
-
-    return response.status.isSuccess()
-}
