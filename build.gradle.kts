@@ -1,4 +1,3 @@
-
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.ktor)
@@ -68,4 +67,10 @@ dependencies {
 
     implementation("io.ktor:ktor-client-apache") // or CIO
     implementation("io.ktor:ktor-serialization-kotlinx-json")
+
+    // HASH
+    implementation("at.favre.lib:bcrypt:0.9.0")
+
+    // ENV
+    implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
 }

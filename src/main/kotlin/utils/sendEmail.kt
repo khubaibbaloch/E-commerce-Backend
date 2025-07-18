@@ -2,6 +2,7 @@ package utils
 
 import data.common.auth.dto.EmailAddress
 import data.common.auth.dto.EmailPayload
+import io.github.cdimascio.dotenv.dotenv
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.apache.Apache
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -28,3 +29,26 @@ import kotlinx.serialization.json.Json
  *
  * @return `true` if the email was sent successfully (2xx response); `false` otherwise.
  */
+suspend fun sendEmail(to: String, subject: String, htmlContent: String): Boolean {
+
+    val dotenv = dotenv()
+    val apiKey = dotenv["MAILERSEND_API_KEY"] ?: error("Missing MAILERSEND_API_KEY")
+    val fromEmail = dotenv["MAILERSEND_FROM_EMAIL"] ?: error("Missing MAILERSEND_FROM_EMAIL")
+
+    val payload = EmailPayload(
+        from = EmailAddress(fromEmail),
+        to = listOf(EmailAddress(to)),
+        subject = subject,
+        html = htmlContent
+    )
+
+    val client = HttpClientHelper.client
+
+    val response = client.post("https://api.mailersend.com/v1/email") {
+        header("Authorization", "Bearer $apiKey")
+        contentType(ContentType.Application.Json)
+        setBody(payload)
+    }
+
+    return response.status.isSuccess()
+}
