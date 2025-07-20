@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:14
+    container_name: postgres
+    environment:
+      POSTGRES_DB: commerce
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Khubaib@301030
+    ports:
+      - "5432:5432"
+    networks:
+      - ktor-network
+
+  ktor-backend:
+    build: .
+    container_name: ktor-backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    networks:
+      - ktor-network
+
+networks:
+  ktor-network:
