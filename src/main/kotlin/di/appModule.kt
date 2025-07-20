@@ -86,7 +86,8 @@ fun appModule(env: ApplicationEnvironment) = module {
      */
     single<Database> {
         val config = HikariConfig().apply {
-            jdbcUrl = "jdbc:postgresql://localhost:5432/commerce" // 🛠️ DB name
+            //jdbcUrl = "jdbc:postgresql://localhost:5432/commerce" // 🛠️ (Local use) DB name
+            jdbcUrl = "jdbc:postgresql://postgres:5432/commerce" // 🛠️ (Docker use) DB name
             driverClassName = "org.postgresql.Driver"
             username = "postgres"                                 // 🔐 Your DB username
             password = "Khubaib@301030"                            // 🔐 Your DB password
