@@ -15,6 +15,17 @@ repositories {
     mavenCentral()
 }
 
+tasks {
+    shadowJar {
+        archiveBaseName.set("e-commerce-backend")
+        archiveClassifier.set("")
+        archiveVersion.set("")
+        manifest {
+            attributes(mapOf("Main-Class" to "com.commerce.ApplicationKt"))
+        }
+    }
+}
+
 dependencies {
     implementation(libs.ktor.server.core)
     implementation(libs.ktor.server.netty)
