@@ -87,4 +87,7 @@ dependencies {
 
     // RABBITMQ
     implementation("com.rabbitmq:amqp-client:5.20.0")
+
+    // KAFKA
+    implementation("org.apache.kafka:kafka-clients:3.6.1")
 }
