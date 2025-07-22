@@ -84,4 +84,7 @@ dependencies {
 
     // ENV
     implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
+
+    // RABBITMQ
+    implementation("com.rabbitmq:amqp-client:5.20.0")
 }
