@@ -35,6 +35,17 @@ services:
     networks:
       - ktor-network
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"     # RabbitMQ main port
+      - "15672:15672"   # RabbitMQ UI (optional but helpful)
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - ktor-network
+
 networks:
   ktor-network:
     driver: bridge
